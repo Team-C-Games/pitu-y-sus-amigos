@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Laberinto.Api/Laberinto.Api.csproj" />
+  <Project Path="Laberinto.Application/Laberinto.Application.csproj" />
+  <Project Path="Laberinto.Domain/Laberinto.Domain.csproj" />
+  <Project Path="Laberinto.Infrastructure/Laberinto.Infrastructure.csproj" />
+  <Project Path="Laberinto.Tests/Laberinto.Tests.csproj" />
+</Solution>

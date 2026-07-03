@@ -1,0 +1,6 @@
+# .NET
+backend/**/bin/
+backend/**/obj/
+
+# macOS
+.DS_Store

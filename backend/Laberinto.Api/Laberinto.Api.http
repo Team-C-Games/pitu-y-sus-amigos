@@ -1,0 +1,6 @@
+@Laberinto.Api_HostAddress = http://localhost:5291
+
+GET {{Laberinto.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
