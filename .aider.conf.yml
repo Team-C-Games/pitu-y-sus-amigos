@@ -1,0 +1,5 @@
+model: ollama/qwen2.5-coder:7b
+auto-commits: true
+attribute-author: false
+attribute-committer: false
+test-cmd: dotnet test backend/Laberinto.Tests/Laberinto.Tests.csproj
