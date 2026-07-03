@@ -1,0 +1,19 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5291:5291"
+
+  frontend:
+    image: node:24
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      # Volumen anónimo: evita que node_modules del host (macOS/arm64) pise
+      # el del container (linux); esbuild/rollup son binarios por plataforma.
+      - /app/node_modules
+    command: sh -c "npm install && npx ng serve --host 0.0.0.0 --port 4200"
+    ports:
+      - "4200:4200"

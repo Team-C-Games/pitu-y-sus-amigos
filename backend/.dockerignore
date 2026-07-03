@@ -1,0 +1,10 @@
+# Evitar que el estado de build del host (macOS/arm64) contamine el container
+**/bin/
+**/obj/
+
+# No hace falta el proyecto de tests para publicar la Api
+Laberinto.Tests/
+
+# Varios
+**/.vs/
+**/*.user
