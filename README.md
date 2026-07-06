@@ -187,3 +187,4 @@ docker compose up --build
 Todos los commits llevan **identidad humana** y **nunca** atribución de IA (ni
 "Claude", ni "Co-authored-by", ni "aider"), tanto en los commits manuales como
 en los automáticos del loop.
+```
