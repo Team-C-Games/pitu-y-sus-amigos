@@ -1,13 +1,10 @@
-namespace Laberinto.Domain
-{
-    public class Dado
-    {
-        private static readonly int[] CARAS = { 1, 2, 2, 3, 3, 4 };
+using System;
 
-        public int Tirar()
-        {
-            Random random = new Random();
-            return CARAS[random.Next(CARAS.Length)];
-        }
+public class Dado
+{
+    public int Tirar()
+    {
+        Random random = new Random();
+        return random.Next(1, 5);
     }
 }
