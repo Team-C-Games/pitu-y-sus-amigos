@@ -4,3 +4,4 @@ backend/**/obj/
 
 # macOS
 .DS_Store
+.aider*
