@@ -28,3 +28,22 @@ Infrastructure/Api.
 - Código en backend/Laberinto.Domain y backend/Laberinto.Tests.
 - Dado no depende de nada fuera de Laberinto.Domain.
 - No modificar contracts/, docs/game-rules.md, ni otras capas.
+# 🧙 PRD — Iteración 1: Entidad Tablero y Mecánica de Símbolos
+
+## Objetivo
+Implementar la estructura básica del tablero de juego (cuadrícula de casillas), la gestión de los símbolos mágicos activos y la lógica para que un peón sume puntos al recolectarlos.
+
+## Alcance
+- **SÍ entra:** La representación del tablero en el dominio, la posición de los símbolos mágicos en sus casillas correspondientes, la bolsa de símbolos para revelar fichas al azar, y el contador de puntos por jugador.
+- **NO entra:** Los muros invisibles subterráneos ni las colisiones (eso va en la siguiente iteración). Tampoco entra la interfaz gráfica web todavía, todo se maneja a nivel de lógica.
+
+## Comportamiento esperado
+- Existe un tablero con sus casillas y una "bolsa de tela" virtual que contiene las 24 fichas de símbolos mágicos.
+- Siempre debe haber exactamente **un (1) símbolo mágico activo** y visible en el tablero.
+- Cuando un peón se mueve y cae exactamente en la casilla del símbolo activo, gana un punto y el sistema saca un nuevo símbolo al azar de la bolsa.
+
+## Criterios de aceptación
+1. **Validación de Bolsa y Símbolo Activo:** Al iniciar el juego, se debe elegir un símbolo al azar de la bolsa de 24 fichas y marcarlo como el "símbolo activo" actual.
+2. **Validación de Captura:** Si un peón termina su movimiento en la casilla del símbolo activo, el jugador suma automáticamente +1 punto, su turno finaliza de inmediato, y ese símbolo se remueve del juego.
+3. **Validación de Spawn:** Inmediatamente después de capturar un símbolo, el sistema debe tomar otra ficha de la bolsa y colocarla en su casilla correspondiente como el nuevo objetivo.
+4. **Caso Especial (Spawn Inmediato):** Si al revelarse el nuevo símbolo resulta que ya había un peón parado en esa casilla, ese jugador se lleva el punto de forma automática y el sistema debe sacar otro símbolo inmediatamente.
