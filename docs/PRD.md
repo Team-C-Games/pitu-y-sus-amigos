@@ -77,7 +77,7 @@ Habilitar el movimiento interactivo por casillas del peón utilizando los pasos 
 - **SÍ entra:** Validación interactiva casilla por casilla, bloqueo de movimientos diagonales, control de retroceso en el mismo turno, colisión con muros invisibles, penalización de reinicio y pérdida de puntos de movimiento excedentes.
 
 ## Criterios de aceptación
-1. **Validación de Restricciones de Movimiento (US-04):** El peón se mueve de forma adyacente (horizontal o vertical). Si el usuario intenta trazar un camino diagonal, el sistema debe ignorar la acción. No se puede pisar dos veces la misma casilla en el mismo turno.
+1. **Validación de Restricciones de Movimiento:** El peón se mueve de forma adyacente (horizontal o vertical). Si el usuario intenta trazar un camino diagonal, el sistema debe ignorar la acción. No se puede pisar dos veces la misma casilla en el mismo turno.
 2. **Movimiento Parcial:** Si el jugador saca un 4 en el dado, el sistema debe permitirle detenerse voluntariamente tras haber avanzado 1, 2 o 3 casillas, cerrando su turno manualmente.
-3. **Penalización por Choque con Muro (US-05):** Si la trayectoria del peón choca contra un muro invisible cargado en la lógica, el peón es teletransportado inmediatamente a su esquina inicial de partida, pierde los pasos que le quedaban en el dado y el turno pasa automáticamente al siguiente jugador.
+3. **Penalización por Choque con Muro:** Si la trayectoria del peón choca contra un muro invisible cargado en la lógica, el peón es teletransportado inmediatamente a su esquina inicial de partida, pierde los pasos que le quedaban en el dado y el turno pasa automáticamente al siguiente jugador.
 4. **Alerta de Colisión:** Al chocar con el muro, el sistema debe desplegar una advertencia visual ("¡Chocaste con un muro!") para alertar al jugador antes de mandar al peón de vuelta a la base.
