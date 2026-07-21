@@ -1,8 +1,8 @@
 # 🧙 Laberinto Mágico - Reglas del Juego
 
-> Este documento describe las reglas del juego de mesa que servirán como base para el desarrollo del videojuego.
+> Este documento describe las reglas funcionales que servirán como base para el desarrollo del videojuego.
 >
-> **Objetivo:** documentar las reglas originales antes de comenzar el diseño técnico. Las decisiones de implementación deberán documentarse en otros archivos y nunca modificar este documento.
+> **Objetivo:** mantener una fuente de verdad de las reglas acordadas por el equipo. Las decisiones exclusivamente técnicas se documentan en otros archivos.
 
 ---
 
@@ -11,12 +11,14 @@
 - [Idea del juego](#idea-del-juego)
 - [Objetivo](#objetivo)
 - [Componentes](#componentes)
+- [Tablero](#tablero)
 - [Preparación](#preparación)
 - [Turno de juego](#turno-de-juego)
 - [Muros invisibles](#muros-invisibles)
 - [Símbolos mágicos](#símbolos-mágicos)
 - [Fin del juego](#fin-del-juego)
-- [Variantes de dificultad](#variantes-de-dificultad)
+- [Dificultad y alcance inicial](#dificultad-y-alcance-inicial)
+- [Configuración fija del tablero](#configuración-fija-del-tablero)
 - [Preguntas abiertas](#preguntas-abiertas)
 
 ---
@@ -59,17 +61,27 @@ Ser el primer jugador en recolectar **cinco símbolos mágicos**.
 
 ---
 
+# Tablero
+
+El tablero tiene una cuadrícula de **6 filas por 6 columnas**, con 36 casillas
+en total.
+
+Cada casilla debe tener al menos una entrada; ninguna puede quedar completamente
+aislada por muros.
+
+---
+
 # Preparación
 
 1. Colocar el laberinto subterráneo dentro de la caja.
-2. Insertar los muros de madera en las ranuras.
-3. Cada casilla debe tener al menos una entrada. Ninguna puede quedar completamente bloqueada.
+2. Cargar la configuración fija de 19 muros en las ranuras correspondientes.
+3. Verificar que cada casilla tenga al menos una entrada y que ninguna quede completamente bloqueada.
 4. Colocar la placa superior sobre el laberinto.
 5. Introducir todas las fichas de símbolos en la bolsa y mezclarlas.
 6. Sacar una ficha al azar y colocarla visible junto al tablero. Ese será el símbolo activo.
-7. Cada jugador elige un peón y lo coloca en una esquina.
-8. En partidas de dos jugadores deben utilizarse esquinas opuestas.
-9. Colocar la bola metálica debajo del tablero, alineada con el peón.
+7. La partida admite de **2 a 4 jugadores**. Las esquinas iniciales se asignan al azar entre las disponibles. En una partida de dos jugadores se elige al azar una pareja de esquinas opuestas y se asigna una a cada participante.
+8. Los jugadores ingresan a la partida uno por uno y, en ese orden, eligen uno de los colores que todavía está disponible.
+9. Colocar la bola metálica debajo del tablero, alineada con cada peón.
 
 ---
 
@@ -77,7 +89,7 @@ Ser el primer jugador en recolectar **cinco símbolos mágicos**.
 
 Los jugadores juegan por turnos.
 
-El jugador inicial será quien haya perdido la partida anterior o, en su defecto, se elegirá al azar.
+El jugador inicial se elige al azar al comenzar cada partida.
 
 Cada turno consta de las siguientes etapas.
 
@@ -85,7 +97,7 @@ Cada turno consta de las siguientes etapas.
 
 El resultado indica la cantidad máxima de casillas que puede recorrer el jugador.
 
-Es válido mover menos casillas de las obtenidas.
+Es válido mover menos casillas de las obtenidas, incluso **cero**. El jugador puede finalizar voluntariamente su turno en la casilla donde se encuentra.
 
 ## 2. Mover el peón
 
@@ -140,10 +152,12 @@ El objetivo de todos es alcanzar la casilla correspondiente a dicho símbolo.
 
 ## Caso especial
 
-Si al revelarse un nuevo símbolo ya existe un peón sobre esa casilla:
+Si al revelarse un nuevo símbolo ya existe uno o más peones sobre esa casilla:
 
-- Ese jugador obtiene automáticamente la ficha.
+- Obtiene automáticamente la ficha el peón que haya llegado primero a esa casilla y permanezca allí.
 - Se revela inmediatamente un nuevo símbolo.
+
+El sistema registra un orden de llegada cada vez que un peón entra en una casilla. Si un peón se mueve fuera de ella y vuelve a entrar, recibe un nuevo orden de llegada. Como los turnos se resuelven de forma secuencial, no puede haber empate en dicho orden.
 
 ---
 
@@ -155,24 +169,39 @@ Ese jugador es el ganador.
 
 ---
 
-# Variantes de dificultad
+# Dificultad y alcance inicial
 
 ## Fácil
 
 - 19 muros
 - Mayor cantidad de caminos abiertos
+- Es la única modalidad incluida en la primera versión del videojuego.
+- La distribución de los muros es fija, está validada y se carga desde una configuración hardcodeada. No se genera al azar.
 
 ## Difícil
 
 - 24 muros
 - Laberinto más complejo
+- Queda fuera del alcance inicial y se considera una mejora futura, junto con las configuraciones aleatorias de muros.
+
+---
+
+# Configuración fija del tablero
+
+Las 24 fichas de símbolos mágicos tienen una casilla fija en el tablero. La
+aplicación las representa mediante una configuración hardcodeada que relaciona
+cada identificador de símbolo con su posición en la cuadrícula de 6×6. La bolsa
+solo determina el orden aleatorio en que esos símbolos se convierten en el
+objetivo activo; nunca cambia su posición.
+
+Los muros permanecen ocultos y no se marcan visualmente cuando un jugador los
+descubre. Los jugadores deben recordarlos durante la partida.
 
 ---
 
 # Preguntas abiertas
 
-Esta sección se mantendrá durante la etapa de análisis del proyecto.
-
-Aquí se registrarán todas las dudas detectadas por la IA o por el equipo antes de comenzar la implementación.
-
-> Inicialmente esta sección debe permanecer vacía y será completada durante el proceso de análisis.
+No hay preguntas funcionales abiertas para el alcance inicial. La transcripción
+exacta de los 24 identificadores de símbolo y sus coordenadas se mantiene como
+dato de configuración del tablero, tomando como referencia el diseño visual
+aprobado.
