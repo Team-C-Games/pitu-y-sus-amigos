@@ -1,8 +1,14 @@
-namespace Laberinto.Domain.Rules;
+namespace Laberinto.Domain.Game;
 
-public class SymbolRules
+public static class SymbolRules
 {
-    public SymbolRules()
+    public static bool HasReachedActiveSymbol(Position playerPosition, Position activeSymbolPosition)
     {
+        return playerPosition.Equals(activeSymbolPosition);
+    }
+
+    public static Guid ResolveCollector(IReadOnlyDictionary<Guid, int> arrivalOrderByPlayer)
+    {
+        return arrivalOrderByPlayer.OrderBy(kv => kv.Value).First().Key;
     }
 }

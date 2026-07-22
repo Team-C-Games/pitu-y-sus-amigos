@@ -1,8 +1,9 @@
 namespace Laberinto.Domain.Board;
 
-public class MagicSymbol
+public enum MagicSymbol
 {
-    public MagicSymbol()
-    {
-    }
+    Sun,
+    Moon,
+    Owl,
+    Spider
 }
