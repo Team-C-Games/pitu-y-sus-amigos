@@ -89,51 +89,50 @@ public sealed class BoardDefinition
     }
 
     private static IReadOnlyDictionary<MagicSymbol, Position> CreateFixedSymbolPositions()
+{
+    var positions = new Dictionary<MagicSymbol, Position>
     {
-        var positions = new Dictionary<MagicSymbol, Position>
-        {
-            [MagicSymbol.Symbol01] = new(0, 1),
-            [MagicSymbol.Symbol02] = new(0, 2),
-            [MagicSymbol.Symbol03] = new(0, 3),
-            [MagicSymbol.Symbol04] = new(0, 4),
-            [MagicSymbol.Symbol05] = new(1, 0),
-            [MagicSymbol.Symbol06] = new(1, 1),
-            [MagicSymbol.Symbol07] = new(1, 4),
-            [MagicSymbol.Symbol08] = new(1, 5),
-            [MagicSymbol.Symbol09] = new(2, 0),
-            [MagicSymbol.Symbol10] = new(2, 2),
-            [MagicSymbol.Symbol11] = new(2, 3),
-            [MagicSymbol.Symbol12] = new(2, 5),
-            [MagicSymbol.Symbol13] = new(3, 0),
-            [MagicSymbol.Symbol14] = new(3, 2),
-            [MagicSymbol.Symbol15] = new(3, 3),
-            [MagicSymbol.Symbol16] = new(3, 5),
-            [MagicSymbol.Symbol17] = new(4, 0),
-            [MagicSymbol.Symbol18] = new(4, 1),
-            [MagicSymbol.Symbol19] = new(4, 4),
-            [MagicSymbol.Symbol20] = new(4, 5),
-            [MagicSymbol.Symbol21] = new(5, 1),
-            [MagicSymbol.Symbol22] = new(5, 2),
-            [MagicSymbol.Symbol23] = new(5, 3),
-            [MagicSymbol.Symbol24] = new(5, 4)
-        };
+        [MagicSymbol.Llave] = new(0, 1),
+        [MagicSymbol.Corona] = new(0, 2),
+        [MagicSymbol.Anillo] = new(0, 3),
+        [MagicSymbol.Espada] = new(0, 4),
+        [MagicSymbol.Cofre] = new(1, 0),
+        [MagicSymbol.Pocion] = new(1, 1),
+        [MagicSymbol.Gema] = new(1, 4),
+        [MagicSymbol.Pergamino] = new(1, 5),
+        [MagicSymbol.Estrella] = new(2, 0),
+        [MagicSymbol.Luna] = new(2, 2),
+        [MagicSymbol.Sol] = new(2, 3),
+        [MagicSymbol.Fuego] = new(2, 5),
+        [MagicSymbol.Caldero] = new(3, 0),
+        [MagicSymbol.Hongo] = new(3, 2),
+        [MagicSymbol.Buho] = new(3, 3),
+        [MagicSymbol.Arania] = new(3, 5),
+        [MagicSymbol.Murcielago] = new(4, 0),
+        [MagicSymbol.Gato] = new(4, 1),
+        [MagicSymbol.Dragon] = new(4, 4),
+        [MagicSymbol.Varita] = new(4, 5),
+        [MagicSymbol.Trebol] = new(5, 1),
+        [MagicSymbol.Herradura] = new(5, 2),
+        [MagicSymbol.Ojo] = new(5, 3),
+        [MagicSymbol.Runa] = new(5, 4)
+    };
 
-        if (positions.Count != SymbolCount ||
-            positions.Count != Enum.GetValues<MagicSymbol>().Length)
-        {
-            throw new InvalidOperationException("The board must configure every one of the 24 magic symbols exactly once.");
-        }
-
-        if (positions.Values.Any(position => !IsInside(position)))
-        {
-            throw new InvalidOperationException("Every magic symbol must be placed inside the 6x6 board.");
-        }
-
-        if (positions.Values.Distinct().Count() != SymbolCount)
-        {
-            throw new InvalidOperationException("Magic symbols must occupy unique board positions.");
-        }
-
-        return new ReadOnlyDictionary<MagicSymbol, Position>(positions);
+    if (positions.Count != SymbolCount ||
+        positions.Count != Enum.GetValues<MagicSymbol>().Length)
+    {
+        throw new InvalidOperationException("The board must configure every one of the 24 magic symbols exactly once.");
     }
+
+    if (positions.Values.Any(position => !IsInside(position)))
+    {
+        throw new InvalidOperationException("Every magic symbol must be placed inside the 6x6 board.");
+    }
+
+    if (positions.Values.Distinct().Count() != SymbolCount)
+    {
+        throw new InvalidOperationException("Magic symbols must occupy unique board positions.");
+    }
+
+    return new ReadOnlyDictionary<MagicSymbol, Position>(positions);
 }
