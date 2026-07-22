@@ -1,10 +1,12 @@
 :host {
   display: block;
+  width: 100%;
   min-height: 100%;
 }
 
 .home-page {
-  min-height: calc(100vh - 120px);
+  width: 100%;
+  min-height: 100%;
   display: grid;
   place-items: center;
   padding: 24px;
@@ -69,15 +71,38 @@
   gap: 12px;
   align-content: start;
   min-height: 220px;
+  width: 100%;
   padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 22px;
+  text-align: left;
   text-decoration: none;
   color: inherit;
   background:
     linear-gradient(180deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.92));
-  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  cursor: pointer;
   transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.home-page__modal-field {
+  display: grid;
+  gap: 8px;
+  width: min(320px, 100%);
+}
+
+.home-page__modal-label {
+  font-size: 0.92rem;
+  color: #334155;
+}
+
+.home-page__modal-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.18);
+  background: #ffffff;
+  color: #0f172a;
 }
 
 .home-page__action-card:hover {

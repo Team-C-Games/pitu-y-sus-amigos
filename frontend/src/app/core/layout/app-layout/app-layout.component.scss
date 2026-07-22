@@ -1,0 +1,48 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.app-layout {
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  position: relative;
+}
+
+.app-layout__header,
+.app-layout__footer {
+  width: 100%;
+}
+
+.app-layout__main {
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  overflow: auto;
+  flex-direction: column;
+}
+
+.app-layout__main > router-outlet {
+  display: none;
+}
+
+.app-layout__main > * {
+  flex: 1;
+  width: 100%;
+  min-height: 100%;
+}
+
+app-loading-overlay {
+  display: block;
+}
+
+app-notification-toast {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+}

@@ -15,11 +15,11 @@
         <span class="home-page__action-copy">Abre una sala nueva y prepara la partida.</span>
       </a>
 
-      <a class="home-page__action-card" [routerLink]="['/lobby']">
+      <button class="home-page__action-card" type="button" (click)="openJoinModal()">
         <span class="home-page__action-icon">🧩</span>
         <span class="home-page__action-title">{{ homeUiState.joinGameLabel }}</span>
         <span class="home-page__action-copy">Únete a una mesa ya creada para seguir jugando.</span>
-      </a>
+      </button>
 
       <a class="home-page__action-card home-page__action-card--spectator" [routerLink]="['/spectator']">
         <span class="home-page__action-icon">👁️</span>
@@ -28,4 +28,24 @@
       </a>
     </div>
   </div>
+
+  <app-base-modal
+    [title]="modalTitle"
+    [opened]="modalOpened"
+    [closable]="modalClosable"
+    (closed)="closeJoinModal()"
+    (cancelled)="closeJoinModal()"
+    (confirmed)="confirmJoin()">
+    <div class="home-page__modal-field">
+      <label class="home-page__modal-label" for="player-name-input">Nombre del jugador</label>
+      <input
+        id="player-name-input"
+        class="home-page__modal-input"
+        type="text"
+        [value]="playerNameDraft()"
+        (input)="playerNameDraft.set($any($event.target).value)"
+        placeholder="Escribe tu nombre"
+      />
+    </div>
+  </app-base-modal>
 </section>

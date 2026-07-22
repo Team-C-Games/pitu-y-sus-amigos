@@ -1,27 +1,28 @@
 <section class="game-page" aria-label="Game page">
   <div class="game-page__board-area">
-    <app-game-board></app-game-board>
+    <app-game-board [boardVisualState]="boardVisualState()"></app-game-board>
   </div>
 
   <aside class="game-page__sidebar">
     <div class="game-page__panel-block">
-      <app-side-panel></app-side-panel>
+      <app-side-panel
+        [players]="players()"
+        [currentTurnPlayer]="currentTurnPlayer()"
+        [readyPlayers]="readyPlayers()"
+        [spectators]="spectators()"
+        [treasuresFound]="treasuresFound()">
+      </app-side-panel>
     </div>
 
     <div class="game-page__mini-panels">
       <app-player-status
-        [playerName]="'Jugador 1'"
-        [playerAvatar]="'placeholder.png'"
-        [treasureCount]="3">
+        [playerName]="currentPlayer().playerName"
+        [playerAvatar]="currentPlayer().playerAvatar"
+        [treasureCount]="currentPlayer().treasureCount">
       </app-player-status>
 
-      <app-treasure-panel
-        [treasure]="{ id: 'forest-treasure', label: 'Tesoro del bosque', visual: '◇' }">
-      </app-treasure-panel>
-
-      <app-dice-panel
-        [dice]="{ value: 4, isAvailable: true }">
-      </app-dice-panel>
+      <app-treasure-panel [treasure]="treasure()"></app-treasure-panel>
+      <app-dice-panel [dice]="dice()"></app-dice-panel>
     </div>
   </aside>
 

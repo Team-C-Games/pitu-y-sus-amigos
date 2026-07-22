@@ -1,15 +1,22 @@
-<header>
+<div class="app-layout">
+  <header class="app-layout__header">
     <app-top-bar></app-top-bar>
-</header>
+  </header>
 
-<main>
+  <main class="app-layout__main">
     <router-outlet></router-outlet>
-</main>
+  </main>
 
-<footer>
+  <footer class="app-layout__footer">
     <!-- reservado para futuras acciones -->
-</footer>
+  </footer>
 
-<app-loading-overlay></app-loading-overlay>
+  <app-loading-overlay></app-loading-overlay>
 
-<app-notification-toast></app-notification-toast>
+  <app-notification-toast
+    [message]="activeMessage"
+    [type]="activeType"
+    [duration]="activeDuration"
+    (closed)="dismissCurrent()">
+  </app-notification-toast>
+</div>
