@@ -1,0 +1,139 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+}
+
+.lobby-page {
+  width: 100%;
+  min-height: 100%;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top, rgba(96, 165, 250, 0.22), transparent 28%),
+    linear-gradient(135deg, #0f172a 0%, #111827 50%, #172554 100%);
+  color: #f8fafc;
+}
+
+.lobby-page__shell {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 22px;
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+}
+
+.lobby-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.lobby-page__eyebrow {
+  margin: 0 0 8px;
+  color: #93c5fd;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+}
+
+.lobby-page__header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.lobby-page__room {
+  display: grid;
+  gap: 8px;
+  min-width: 220px;
+}
+
+.lobby-page__room-label,
+.lobby-page__panel h2,
+.lobby-page__counter {
+  font-size: 0.92rem;
+  color: #cbd5e1;
+}
+
+.lobby-page__content {
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr;
+  gap: 20px;
+}
+
+.lobby-page__panel {
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(30, 41, 59, 0.68);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.lobby-page__panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.lobby-page__panel h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.lobby-page__counter {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.18);
+  border: 1px solid rgba(191, 219, 254, 0.32);
+}
+
+.lobby-page__sidebar {
+  display: grid;
+  gap: 16px;
+}
+
+.lobby-page__panel--compact {
+  display: grid;
+  gap: 12px;
+}
+
+.lobby-page__buttons {
+  display: grid;
+  gap: 10px;
+}
+
+.lobby-page__list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  color: #e2e8f0;
+}
+
+@media (max-width: 900px) {
+  .lobby-page__content {
+    grid-template-columns: 1fr;
+  }
+
+  .lobby-page__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 640px) {
+  .lobby-page {
+    padding: 12px;
+  }
+
+  .lobby-page__shell {
+    padding: 16px;
+    border-radius: 18px;
+  }
+}

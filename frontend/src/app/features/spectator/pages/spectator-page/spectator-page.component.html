@@ -1,4 +1,44 @@
-<section>
-  <h1>{{ spectatorUiState.title }}</h1>
-  <p>{{ spectatorUiState.watchingLabel }}</p>
+<section class="spectator-page" aria-label="Spectator page">
+  <div class="spectator-page__board-area">
+    <app-game-board></app-game-board>
+  </div>
+
+  <aside class="spectator-page__sidebar">
+    <div class="spectator-page__panel-block">
+      <app-side-panel
+        [players]="[
+          { id: '1', name: 'Jugador 1', isReady: true, isCurrentTurn: false },
+          { id: '2', name: 'Jugador 2', isReady: true, isCurrentTurn: true },
+          { id: '3', name: 'Jugador 3', isReady: false, isCurrentTurn: false }
+        ]"
+        [currentTurnPlayer]="{ id: '2', name: 'Jugador 2', isReady: true, isCurrentTurn: true }"
+        [readyPlayers]="[
+          { id: '1', name: 'Jugador 1', isReady: true, isCurrentTurn: false },
+          { id: '2', name: 'Jugador 2', isReady: true, isCurrentTurn: true }
+        ]"
+        [spectators]="['Espectador 1', 'Espectador 2']"
+        [treasuresFound]="3">
+      </app-side-panel>
+    </div>
+
+    <div class="spectator-page__mini-panels">
+      <app-player-status
+        [playerName]="'Jugador 1'"
+        [playerAvatar]="'placeholder.png'"
+        [treasureCount]="3">
+      </app-player-status>
+
+      <app-treasure-panel
+        [treasure]="{ id: 'forest-treasure', label: 'Tesoro del bosque', visual: '◇' }">
+      </app-treasure-panel>
+    </div>
+  </aside>
+
+  <div class="spectator-page__action-area">
+    <app-action-panel
+      [playerMode]="'spectator'"
+      [turnState]="'waiting'"
+      [actions]="[]">
+    </app-action-panel>
+  </div>
 </section>

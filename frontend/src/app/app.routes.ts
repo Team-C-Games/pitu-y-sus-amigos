@@ -26,8 +26,14 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/game/game.routes')
             .then(m => m.GAME_ROUTES)
-      }
+      },
 
+      {
+        path: 'spectator',
+        loadChildren: () =>
+          import('./features/spectator/spectator.routes')
+            .then(m => m.SPECTATOR_ROUTES)
+      }
     ]
   }
 ];
