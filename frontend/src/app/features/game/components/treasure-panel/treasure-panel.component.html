@@ -1,4 +1,11 @@
 <div>
-  <span>Tesoros objetivo:</span>
-  <span>{{ treasureObjective }}</span>
+  @if (objectiveState === 'hidden') {
+    <span>{{ hiddenLabel }}</span>
+  } @else if (objectiveState === 'revealed') {
+    <span>{{ revealedLabel }}</span>
+    <span>{{ treasureObjective }}</span>
+  } @else {
+    <span>{{ foundLabel }}</span>
+    <span>{{ treasureObjective }}</span>
+  }
 </div>

@@ -1,24 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component, Input } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { HomeUiState } from '../../models';
 
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.scss'], 
-  imports: [
-    CommonModule,
-    RouterModule
-  ]
+  styleUrls: ['./home-page.component.scss'],
+  imports: [CommonModule, RouterModule],
 })
 export class HomePageComponent {
-  constructor(private router: Router) {}
-
-  navigateToLobby(): void {
-    this.router.navigate(['/lobby']);
-  }
-
-  navigateToSpectator(): void {
-    this.router.navigate(['/spectator']);
-  }
+  @Input() homeUiState: HomeUiState = {
+    title: 'Laberinto',
+    createGameLabel: 'Crear partida',
+    joinGameLabel: 'Unirse a una partida',
+    spectatorLabel: 'Espectar partida',
+  };
 }

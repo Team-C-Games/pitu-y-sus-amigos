@@ -1,20 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { HiddenWallComponent } from '../hidden-wall/hidden-wall.component';
-import { TreasureTileComponent } from '../treasure-tile/treasure-tile.component';
-import { PlayerPieceComponent } from '../player-piece/player-piece.component';
-import { BoardTileComponent } from '../board-tile/board-tile.component';
+import { Component, Input } from '@angular/core';
+import { BoardComponent } from '../../board/board.component';
+import { BoardVisualState } from '../../board/models';
 
 @Component({
   selector: 'app-game-board',
   templateUrl: './game-board.component.html',
   styleUrls: ['./game-board.component.scss'],
-  imports: [
-    CommonModule,
-    BoardTileComponent,
-    PlayerPieceComponent,
-    TreasureTileComponent,
-    HiddenWallComponent
-  ]
+  imports: [CommonModule, BoardComponent],
 })
-export class GameBoardComponent {}
+export class GameBoardComponent {
+  @Input() boardVisualState: BoardVisualState = {
+    cells: [],
+    pieces: [],
+    walls: [],
+    animations: [],
+    selection: undefined,
+  };
+}

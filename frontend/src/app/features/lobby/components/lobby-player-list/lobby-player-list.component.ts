@@ -9,9 +9,9 @@ import { PlayerCardComponent } from '../player-card/player-card.component';
   styleUrls: ['./lobby-player-list.component.scss'],
   imports: [
     CommonModule,
-    PlayerCardComponent
-  ]
+    PlayerCardComponent,
+  ],
 })
 export class LobbyPlayerListComponent {
-  @Input() players!: LobbyPlayer[];
+  @Input() players: readonly LobbyPlayer[] = [];
 }

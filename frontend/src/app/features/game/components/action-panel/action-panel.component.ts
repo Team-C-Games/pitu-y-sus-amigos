@@ -1,12 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { PlayerMode, TurnState } from '../../models';
 
 @Component({
   selector: 'app-action-panel',
   templateUrl: './action-panel.component.html',
   styleUrls: ['./action-panel.component.scss'],
-  imports: [
-    CommonModule
-  ]
+  imports: [CommonModule],
 })
-export class ActionPanelComponent {}
+export class ActionPanelComponent {
+  @Input() turnState: TurnState = 'waiting';
+  @Input() playerMode: PlayerMode = 'player';
+  @Input() actions: string[] = [];
+}
