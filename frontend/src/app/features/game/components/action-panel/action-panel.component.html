@@ -1,3 +1,19 @@
 <div>
-  <!-- Placeholder for the action panel -->
+  @if (playerMode === 'spectator') {
+    <p>Observando partida</p>
+  } @else if (turnState === 'finished') {
+    <p>Partida finalizada</p>
+  } @else if (turnState === 'waiting') {
+    <p>Esperando turno...</p>
+  } @else {
+    @if (actions.length > 0) {
+      <ul>
+        @for (action of actions; track action) {
+          <li>{{ action }}</li>
+        }
+      </ul>
+    } @else {
+      <p>Acciones del turno</p>
+    }
+  }
 </div>

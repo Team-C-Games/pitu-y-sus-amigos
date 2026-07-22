@@ -1,4 +1,10 @@
-<section class="board" aria-label="Game board" role="grid">
+<section
+  class="board"
+  aria-label="Game board"
+  role="grid"
+  [class.board--selected]="hasSelection()"
+  [class.board--animated]="hasAnimations()"
+>
   @for (row of indexes; track row) {
     @for (column of indexes; track column) {
       <app-tile
@@ -7,5 +13,35 @@
         [visual]="tileFor(row, column)"
       />
     }
+  }
+
+  @if (boardVisualState().pieces.length > 0) {
+    <div class="board__pieces" aria-hidden="true">
+      @for (piece of boardVisualState().pieces; track piece.label) {
+        <app-piece [piece]="piece" />
+      }
+    </div>
+  }
+
+  @if (boardVisualState().walls.length > 0) {
+    <div class="board__walls" aria-hidden="true">
+      @for (wall of boardVisualState().walls; track wall.position.row + '-' + wall.position.column + '-' + wall.orientation) {
+        <app-wall [wall]="wall" />
+      }
+    </div>
+  }
+
+  @if (boardVisualState().animations.length > 0) {
+    <div class="board__animations" aria-label="Board animations">
+      @for (animation of boardVisualState().animations; track animation) {
+        <span>{{ animation }}</span>
+      }
+    </div>
+  }
+
+  @if (boardVisualState().selection) {
+    <div class="board__selection" aria-label="Board selection">
+      <span>Selected: {{ boardVisualState().selection!.row }}, {{ boardVisualState().selection!.column }}</span>
+    </div>
   }
 </section>

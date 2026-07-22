@@ -1,9 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PlayerStatusComponent } from '../player-status/player-status.component';
 import { TurnIndicatorComponent } from '../turn-indicator/turn-indicator.component';
 import { DicePanelComponent } from '../dice-panel/dice-panel.component';
 import { ActionPanelComponent } from '../action-panel/action-panel.component';
+
+export interface SidePanelPlayer {
+  readonly id: string;
+  readonly name: string;
+  readonly isReady?: boolean;
+  readonly isCurrentTurn?: boolean;
+}
 
 @Component({
   selector: 'app-side-panel',
@@ -14,7 +21,13 @@ import { ActionPanelComponent } from '../action-panel/action-panel.component';
     PlayerStatusComponent,
     TurnIndicatorComponent,
     DicePanelComponent,
-    ActionPanelComponent
-  ]
+    ActionPanelComponent,
+  ],
 })
-export class SidePanelComponent {}
+export class SidePanelComponent {
+  @Input() players: SidePanelPlayer[] = [];
+  @Input() currentTurnPlayer?: SidePanelPlayer;
+  @Input() readyPlayers: SidePanelPlayer[] = [];
+  @Input() spectators: string[] = [];
+  @Input() treasuresFound = 0;
+}
