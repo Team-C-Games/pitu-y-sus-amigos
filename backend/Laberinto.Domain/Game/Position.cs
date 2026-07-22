@@ -1,6 +1,6 @@
 namespace Laberinto.Domain.Game;
 
-public class Position
+public sealed class Position : IEquatable<Position>
 {
     public int Row { get; }
     public int Column { get; }
@@ -11,9 +11,14 @@ public class Position
         Column = column;
     }
 
+    public bool Equals(Position? other)
+    {
+        return other is not null && Row == other.Row && Column == other.Column;
+    }
+
     public override bool Equals(object? obj)
     {
-        return obj is Position other && Row == other.Row && Column == other.Column;
+        return obj is Position other && Equals(other);
     }
 
     public override int GetHashCode()

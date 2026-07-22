@@ -1,10 +1,26 @@
+using Laberinto.Api.Endpoints;
+using Laberinto.Api.Hubs;
+using Laberinto.Api.Realtime;
+using Laberinto.Infrastructure.Persistence.InMemory;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<ConnectionRegistry>();
+builder.Services.AddSingleton<RealtimeBroadcaster>();
+builder.Services.AddSingleton<RealtimeCommandValidator>();
+builder.Services.AddSingleton(typeof(SingleSessionStore<>));
+
+var gameBridgeMode = builder.Services.AddGameBridge(
+    builder.Configuration,
+    builder.Environment);
 
 var app = builder.Build();
+
+app.Logger.LogInformation("Game bridge mode: {Mode}", gameBridgeMode);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -13,6 +29,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapHub<GameHub>("/hubs/game");
+app.MapHealthEndpoints();
 
 var summaries = new[]
 {
@@ -38,4 +57,8 @@ app.Run();
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+}
+
+public partial class Program
+{
 }
