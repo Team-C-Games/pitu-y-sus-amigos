@@ -1,19 +1,48 @@
-<div>
+<div class="action-panel">
   @if (playerMode === 'spectator') {
-    <p>Observando partida</p>
+    <div class="action-panel__status">Observando partida</div>
   } @else if (turnState === 'finished') {
-    <p>Partida finalizada</p>
+    <section class="result-card" aria-label="Pantalla de partida finalizada">
+      <span class="result-card__eyebrow">Partida finalizada</span>
+
+      <div class="result-card__header">
+        <h2>Ganador</h2>
+        <p class="result-card__winner">Jugador 1</p>
+      </div>
+
+      <div class="result-card__grid">
+        <article class="result-card__stat">
+          <h3>Clasificación</h3>
+          <ol class="result-card__ranking">
+            <li>1. Jugador 1</li>
+            <li>2. Jugador 2</li>
+            <li>3. Jugador 3</li>
+          </ol>
+        </article>
+
+        <article class="result-card__stat">
+          <h3>Tesoros encontrados</h3>
+          <p class="result-card__treasures">3</p>
+        </article>
+      </div>
+
+      <div class="result-card__actions">
+        <button class="result-card__button result-card__button--primary" type="button">
+          Volver al inicio
+        </button>
+      </div>
+    </section>
   } @else if (turnState === 'waiting') {
-    <p>Esperando turno...</p>
+    <div class="action-panel__status">Esperando turno...</div>
   } @else {
     @if (actions.length > 0) {
-      <ul>
+      <ul class="action-panel__list">
         @for (action of actions; track action) {
           <li>{{ action }}</li>
         }
       </ul>
     } @else {
-      <p>Acciones del turno</p>
+      <div class="action-panel__status">Acciones del turno</div>
     }
   }
 </div>

@@ -1,4 +1,12 @@
-<section>
-  <h1>{{ spectatorUiState.title }}</h1>
-  <p>{{ spectatorUiState.watchingLabel }}</p>
+<section class="spectator-page" aria-label="Spectator page">
+  <div class="spectator-page__shell">
+    <div class="spectator-page__badge">Modo observador</div>
+    <h1>{{ spectatorUiState.title }}</h1>
+    <p>{{ spectatorUiState.watchingLabel }}</p>
+
+    <div class="spectator-page__status" aria-hidden="true">
+      <span class="spectator-page__dot"></span>
+      <span>Transmitiendo en vivo</span>
+    </div>
+  </div>
 </section>

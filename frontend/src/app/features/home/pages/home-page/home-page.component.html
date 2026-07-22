@@ -1,6 +1,31 @@
-<div>
-  <h1>{{ homeUiState.title }}</h1>
-  <a [routerLink]="['/lobby']">{{ homeUiState.createGameLabel }}</a>
-  <a [routerLink]="['/lobby']">{{ homeUiState.joinGameLabel }}</a>
-  <a [routerLink]="['/spectator']">{{ homeUiState.spectatorLabel }}</a>
-</div>
+<section class="home-page" aria-label="Home page">
+  <div class="home-page__shell">
+    <div class="home-page__hero">
+      <div class="home-page__badge">Tablero estratégico</div>
+      <h1>{{ homeUiState.title }}</h1>
+      <p class="home-page__subtitle">
+        Sumérgete en una partida de mesa moderna donde cada turno importa.
+      </p>
+    </div>
+
+    <div class="home-page__actions">
+      <a class="home-page__action-card" [routerLink]="['/lobby']">
+        <span class="home-page__action-icon">🎲</span>
+        <span class="home-page__action-title">{{ homeUiState.createGameLabel }}</span>
+        <span class="home-page__action-copy">Abre una sala nueva y prepara la partida.</span>
+      </a>
+
+      <a class="home-page__action-card" [routerLink]="['/lobby']">
+        <span class="home-page__action-icon">🧩</span>
+        <span class="home-page__action-title">{{ homeUiState.joinGameLabel }}</span>
+        <span class="home-page__action-copy">Únete a una mesa ya creada para seguir jugando.</span>
+      </a>
+
+      <a class="home-page__action-card home-page__action-card--spectator" [routerLink]="['/spectator']">
+        <span class="home-page__action-icon">👁️</span>
+        <span class="home-page__action-title">{{ homeUiState.spectatorLabel }}</span>
+        <span class="home-page__action-copy">Observa la partida en vivo desde la vista del público.</span>
+      </a>
+    </div>
+  </div>
+</section>

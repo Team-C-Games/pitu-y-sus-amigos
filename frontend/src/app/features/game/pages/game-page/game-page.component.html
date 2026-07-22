@@ -1,5 +1,31 @@
-<div>
-  <app-game-board></app-game-board>
-  <app-side-panel></app-side-panel>
-  <app-action-panel></app-action-panel>
-</div>
+<section class="game-page" aria-label="Game page">
+  <div class="game-page__board-area">
+    <app-game-board></app-game-board>
+  </div>
+
+  <aside class="game-page__sidebar">
+    <div class="game-page__panel-block">
+      <app-side-panel></app-side-panel>
+    </div>
+
+    <div class="game-page__mini-panels">
+      <app-player-status
+        [playerName]="'Jugador 1'"
+        [playerAvatar]="'placeholder.png'"
+        [treasureCount]="3">
+      </app-player-status>
+
+      <app-treasure-panel
+        [treasure]="{ id: 'forest-treasure', label: 'Tesoro del bosque', visual: '◇' }">
+      </app-treasure-panel>
+
+      <app-dice-panel
+        [dice]="{ value: 4, isAvailable: true }">
+      </app-dice-panel>
+    </div>
+  </aside>
+
+  <div class="game-page__action-area">
+    <app-action-panel></app-action-panel>
+  </div>
+</section>
