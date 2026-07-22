@@ -1,0 +1,7 @@
+<div>
+  <img [src]="player.avatar || 'placeholder.png'" alt="Avatar">
+  <span>{{ player.name }}</span>
+  <span *ngIf="player.isHost">Host</span>
+  <span *ngIf="player.isReady">Ready</span>
+  <span *ngIf="player.isCurrentTurn">Current Turn</span>
+</div>
