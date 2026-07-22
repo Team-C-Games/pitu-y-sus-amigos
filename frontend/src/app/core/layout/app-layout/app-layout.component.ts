@@ -6,7 +6,12 @@ import { TopBarComponent } from '../../../shared/components/top-bar/top-bar.comp
 
 @Component({
   selector: 'app-app-layout',
-  imports: [TopBarComponent, RouterOutlet, LoadingOverlayComponent, NotificationToastComponent],
+  imports: [
+    TopBarComponent, 
+    RouterOutlet, 
+    LoadingOverlayComponent, 
+    NotificationToastComponent
+  ],
   templateUrl: './app-layout.component.html',
   styleUrls: ['./app-layout.component.scss']
 })
