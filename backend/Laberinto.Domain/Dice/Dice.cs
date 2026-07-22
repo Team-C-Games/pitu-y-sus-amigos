@@ -1,23 +1,27 @@
-using Laberinto.Domain.Board;
-
-namespace Laberinto.Domain.Game;
+namespace Laberinto.Domain.Dice;
 
 public interface IDiceRoller
 {
-    MagicSymbol Roll();
+    int Roll();
 }
 
-public class Dice
+public sealed class Dice
 {
     private readonly IDiceRoller _roller;
 
     public Dice(IDiceRoller roller)
     {
-        _roller = roller;
+        _roller = roller ?? throw new ArgumentNullException(nameof(roller));
     }
 
-    public MagicSymbol Roll()
+    public int Roll()
     {
-        return _roller.Roll();
+        var steps = _roller.Roll();
+        if (steps is < 1 or > 4)
+        {
+            throw new InvalidOperationException("A dice roll must produce between one and four steps.");
+        }
+
+        return steps;
     }
 }
