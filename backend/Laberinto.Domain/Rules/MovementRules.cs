@@ -1,18 +1,34 @@
-using System.Collections.Generic;
-using System.Linq;
 using Laberinto.Domain.Board;
+using Laberinto.Domain.Game;
 
-namespace Laberinto.Domain.Game;
+namespace Laberinto.Domain.Rules;
 
 public static class MovementRules
 {
     public static MoveResult ExecutePath(
-        Board board,
+        BoardDefinition board,
         Position from,
         Position startingCorner,
         IReadOnlyList<Direction> path,
         out Position finalPosition)
     {
+        ArgumentNullException.ThrowIfNull(board);
+        ArgumentNullException.ThrowIfNull(from);
+        ArgumentNullException.ThrowIfNull(startingCorner);
+        ArgumentNullException.ThrowIfNull(path);
+
+        if (!BoardDefinition.IsInside(from))
+        {
+            throw new ArgumentOutOfRangeException(nameof(from), "Movement position must be inside the board.");
+        }
+
+        if (!BoardDefinition.IsInside(startingCorner))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(startingCorner),
+                "Starting corner must be inside the board.");
+        }
+
         var visited = new HashSet<Position> { from };
         var current = from;
 

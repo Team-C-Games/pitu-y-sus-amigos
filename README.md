@@ -9,8 +9,8 @@ Este README explica cómo está armado el proyecto y cómo trabajar en él. Cual
 integrante nuevo debería poder leerlo y arrancar sin preguntarle a nadie.
 
 > **Las reglas completas del juego están en [`docs/game-rules.md`](docs/game-rules.md).**
-> Ese documento es la **fuente de verdad** de las reglas y no se modifica: las
-> decisiones de implementación van en otros archivos (ver más abajo).
+> Ese documento es la **fuente de verdad funcional**; cualquier cambio requiere
+> acuerdo y documentación del equipo.
 
 ---
 
@@ -41,13 +41,19 @@ Para el detalle exacto, ver siempre `docs/game-rules.md`.
 | Frontend | **Angular** (carpeta `frontend/`) |
 | Backend | **ASP.NET Core 10 + SignalR** (carpeta `backend/`) para el tiempo real por turnos |
 | Arquitectura backend | **Clean Architecture**: `Domain → Application → Infrastructure → Api` |
-| Estado | **En memoria** por ahora (sin base de datos en esta fase) |
+| Estado | Una única partida activa **en memoria**; no hay base de datos ni historial |
 
-**Hacia dónde va** (todavía no implementado):
+**Estado actual:**
 
-- **Supabase (Postgres)** como base de datos persistente.
-- **Railway** como hosting del backend.
-- **Vercel** para el frontend.
+- No se usa Supabase, PostgreSQL ni ninguna otra base de datos en esta versión.
+- Reiniciar o volver a desplegar el backend elimina la partida en memoria.
+- El tablero es de 6×6 y contiene 24 símbolos con posiciones fijas. Hasta que
+  se incorporen los nombres visuales definitivos se identifican como
+  `Symbol01` a `Symbol24`; la bolsa solo selecciona el objetivo y no mueve los
+  símbolos.
+- La API expone comunicación en tiempo real con SignalR. Persona 3 consume el
+  método `game-event`, cuyo envelope público contiene `Type`, `Payload` y
+  `OccurredAt`.
 
 La regla de dependencias de Clean Architecture es: las capas de adentro no
 conocen a las de afuera. `Domain` no depende de nadie; `Application` depende de
@@ -167,7 +173,7 @@ docker compose up --build
 ├── frontend/             # Aplicación Angular (interfaz del jugador)
 │
 ├── docs/                 # Documentación del proyecto
-│   ├── game-rules.md     # Reglas del juego — FUENTE DE VERDAD (no se modifica)
+│   ├── game-rules.md     # Fuente de verdad funcional; los cambios se acuerdan y documentan
 │   ├── PRD.md            # Objetivo actual del loop (lo escribe el Analista Funcional)
 │   ├── features.md       # Detalle de features
 │   └── decision_log.md   # Registro de decisiones técnicas del loop
@@ -182,9 +188,51 @@ docker compose up --build
 
 ---
 
+## Verificación local
+
+```bash
+dotnet build backend/Laberinto.Api/Laberinto.Api.csproj
+dotnet test backend/Laberinto.Tests/Laberinto.Tests.csproj
+```
+
+---
+
+## Modos del bridge de juego
+
+`Real` es el modo predeterminado. Mientras Persona 1 no entregue sus contratos,
+handlers y DTOs, el bridge real responde con `not-ready`. Cuando esos contratos
+estén disponibles se agregará `ApplicationGameBridge`, sin modificar `GameHub`.
+También siguen pendientes las 19 coordenadas oficiales de los muros fijos del
+modo fácil; no se generan muros al azar.
+
+`Mock` usa datos simulados únicamente para desarrollo y pruebas. No contiene
+reglas del juego ni reemplaza el trabajo de Persona 1. La API rechaza el modo
+`Mock` durante el arranque si el entorno no es `Development`.
+
+Modo real predeterminado:
+
+```bash
+dotnet run --project backend/Laberinto.Api/Laberinto.Api.csproj
+```
+
+Modo mock en macOS/Linux:
+
+```bash
+ASPNETCORE_ENVIRONMENT=Development GameBridge__Mode=Mock dotnet run --project backend/Laberinto.Api/Laberinto.Api.csproj
+```
+
+Modo mock en PowerShell:
+
+```powershell
+$env:ASPNETCORE_ENVIRONMENT="Development"
+$env:GameBridge__Mode="Mock"
+dotnet run --project backend/Laberinto.Api/Laberinto.Api.csproj
+```
+
+---
+
 ### Convención de commits
 
 Todos los commits llevan **identidad humana** y **nunca** atribución de IA (ni
 "Claude", ni "Co-authored-by", ni "aider"), tanto en los commits manuales como
 en los automáticos del loop.
-```

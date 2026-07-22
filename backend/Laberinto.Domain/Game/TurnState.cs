@@ -1,18 +1,33 @@
 namespace Laberinto.Domain.Game;
 
-public class TurnState
+public sealed class TurnState
 {
-    private readonly List<Guid> _playerOrder;
+    private readonly IReadOnlyList<Guid> _playerOrder;
     private int _currentPlayerIndex;
 
     public TurnPhase CurrentPhase { get; private set; }
 
-    public TurnState(List<Guid> playerOrder)
+    public TurnState(IEnumerable<Guid> playerOrder)
     {
-        if (playerOrder == null || playerOrder.Count == 0)
-            throw new ArgumentException("Debe haber al menos un jugador para iniciar el turno.");
+        ArgumentNullException.ThrowIfNull(playerOrder);
 
-        _playerOrder = playerOrder;
+        var configuredOrder = playerOrder.ToArray();
+        if (configuredOrder.Length is < 2 or > 4)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(playerOrder),
+                "A game requires between two and four players.");
+        }
+
+        if (configuredOrder.Any(playerId => playerId == Guid.Empty) ||
+            configuredOrder.Distinct().Count() != configuredOrder.Length)
+        {
+            throw new ArgumentException(
+                "Player order must contain unique, non-empty identifiers.",
+                nameof(playerOrder));
+        }
+
+        _playerOrder = Array.AsReadOnly(configuredOrder);
         _currentPlayerIndex = 0;
         CurrentPhase = TurnPhase.WaitingForRoll;
     }
@@ -26,6 +41,11 @@ public class TurnState
 
     public void AdvancePhase(TurnPhase newPhase)
     {
+        if (!Enum.IsDefined(newPhase))
+        {
+            throw new ArgumentOutOfRangeException(nameof(newPhase));
+        }
+
         CurrentPhase = newPhase;
     }
 
