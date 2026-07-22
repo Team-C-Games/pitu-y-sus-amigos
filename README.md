@@ -193,6 +193,7 @@ docker compose up --build
 ```bash
 dotnet build backend/Laberinto.Api/Laberinto.Api.csproj
 dotnet test backend/Laberinto.Tests/Laberinto.Tests.csproj
+dotnet list backend/Laberinto.Api/Laberinto.Api.csproj package --include-transitive
 ```
 
 ---
@@ -228,6 +229,18 @@ $env:ASPNETCORE_ENVIRONMENT="Development"
 $env:GameBridge__Mode="Mock"
 dotnet run --project backend/Laberinto.Api/Laberinto.Api.csproj
 ```
+
+## CORS de desarrollo
+
+En `Development`, la API permite solicitudes y negociación SignalR únicamente
+desde `http://localhost:4200`, configurado en
+`backend/Laberinto.Api/appsettings.Development.json`. La política usa un origen
+explícito y credenciales, y no se registra fuera de `Development`.
+
+No se debe usar `GameBridge__Mode=Mock` ni habilitar una política CORS amplia en
+producción. Si el frontend se sirve desde otro origen local, se debe agregar ese
+origen explícitamente a `Cors:AllowedOrigins` en la configuración exclusiva de
+desarrollo.
 
 ---
 

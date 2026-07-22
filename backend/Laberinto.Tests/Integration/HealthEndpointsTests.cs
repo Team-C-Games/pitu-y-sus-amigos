@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Laberinto.Tests.Integration;
@@ -24,5 +25,47 @@ public class HealthEndpointsTests : IClassFixture<WebApplicationFactory<Program>
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("ok", payload.RootElement.GetProperty("status").GetString());
+    }
+
+    [Fact]
+    public async Task Development_cors_allows_the_local_frontend_origin()
+    {
+        using var developmentFactory = _factory.WithWebHostBuilder(builder =>
+            builder.UseEnvironment("Development"));
+        using var client = developmentFactory.CreateClient();
+        using var request = new HttpRequestMessage(
+            HttpMethod.Options,
+            "/hubs/game/negotiate");
+
+        request.Headers.Add("Origin", "http://localhost:4200");
+        request.Headers.Add("Access-Control-Request-Method", "POST");
+
+        using var response = await client.SendAsync(request);
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        Assert.Equal(
+            "http://localhost:4200",
+            response.Headers.GetValues("Access-Control-Allow-Origin").Single());
+        Assert.Equal(
+            "true",
+            response.Headers.GetValues("Access-Control-Allow-Credentials").Single());
+    }
+
+    [Fact]
+    public async Task Production_does_not_enable_the_development_cors_policy()
+    {
+        using var productionFactory = _factory.WithWebHostBuilder(builder =>
+            builder.UseEnvironment("Production"));
+        using var client = productionFactory.CreateClient();
+        using var request = new HttpRequestMessage(
+            HttpMethod.Options,
+            "/hubs/game/negotiate");
+
+        request.Headers.Add("Origin", "http://localhost:4200");
+        request.Headers.Add("Access-Control-Request-Method", "POST");
+
+        using var response = await client.SendAsync(request);
+
+        Assert.False(response.Headers.Contains("Access-Control-Allow-Origin"));
     }
 }

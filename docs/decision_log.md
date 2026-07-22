@@ -99,3 +99,35 @@ No se creó `ApplicationGameBridge`. `Laberinto.Application` no contiene todaví
 - contratos de eventos para estado actualizado, choque con muro y fin de partida.
 
 El modo `Real` mantiene `UnavailableRealGameBridge` y responde `not-ready`. `GameHub` continúa dependiendo únicamente de `IGameBridge`. Cuando Persona 1 entregue estos contratos se podrá agregar `ApplicationGameBridge` y cambiar solo el registro de dependencias, sin modificar el hub ni el protocolo `game-event`.
+
+## Correcciones de preparación (22/07/2026 - Guillote)
+
+### Dependencia OpenAPI
+
+- `Microsoft.AspNetCore.OpenApi` 10.0.9 incorpora `Microsoft.OpenApi` 2.0.0 de
+  forma transitiva.
+- Se fija exclusivamente `Microsoft.OpenApi` en la versión 2.7.5, que corrige
+  la vulnerabilidad `GHSA-v5pm-xwqc-g5wc`, sin cambiar el framework ni otros
+  paquetes.
+
+### Esquinas iniciales
+
+- La regla funcional única es asignación aleatoria de esquinas.
+- Con dos jugadores se elige al azar una pareja de esquinas opuestas.
+- Los jugadores no eligen ni modifican su esquina inicial.
+
+### CORS de desarrollo
+
+- La política `DevelopmentFrontend` se registra solo cuando el entorno es
+  `Development` y hay orígenes configurados.
+- La configuración versionada permite únicamente `http://localhost:4200`, con
+  métodos, encabezados y credenciales necesarios para SignalR.
+- Producción no registra esta política; cualquier origen adicional debe ser una
+  decisión explícita de despliegue.
+
+### Muros fáciles
+
+- Sigue sin existir una fuente aprobada con las 19 coordenadas oficiales.
+- `EasyBoardDefinition` permanece como validador de una lista externa y tiene
+  un único TODO localizado para incorporar el layout cuando el equipo entregue
+  esa fuente. No se inventó ninguna configuración de muros.
