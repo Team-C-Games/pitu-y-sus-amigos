@@ -1,8 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-notification-toast',
+  imports: [CommonModule],
   templateUrl: './notification-toast.component.html',
   styleUrls: ['./notification-toast.component.scss']
 })

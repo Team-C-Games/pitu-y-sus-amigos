@@ -1,8 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-base-modal',
+  imports: [CommonModule],
   templateUrl: './base-modal.component.html',
   styleUrls: ['./base-modal.component.scss']
 })
