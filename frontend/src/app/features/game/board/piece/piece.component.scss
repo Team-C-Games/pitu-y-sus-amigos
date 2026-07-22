@@ -1,0 +1,11 @@
+:host {
+  display: inline-block;
+}
+
+.piece {
+  width: 1.5rem;
+  aspect-ratio: 1;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 35%);
+}

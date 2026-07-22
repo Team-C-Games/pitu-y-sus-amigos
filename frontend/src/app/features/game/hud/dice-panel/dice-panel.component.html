@@ -1,0 +1,12 @@
+<section class="dice-panel">
+  <div class="dice-panel__value" aria-label="Dice result">
+    <span *ngIf="dice()?.value !== null && dice()?.value !== undefined; else noValue">
+      {{ dice()?.value }}
+    </span>
+    <ng-template #noValue>—</ng-template>
+  </div>
+
+  <button type="button" [disabled]="!(dice()?.isAvailable ?? false)" (click)="rollRequested.emit()">
+    Roll dice
+  </button>
+</section>

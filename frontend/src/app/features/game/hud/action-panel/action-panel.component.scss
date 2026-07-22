@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+.action-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid #cfc3ad;
+  border-radius: 0.5rem;
+  background: #fffaf0;
+}

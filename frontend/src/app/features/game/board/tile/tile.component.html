@@ -1,0 +1,9 @@
+<div
+  class="tile"
+  [class.tile--emphasized]="visual()?.emphasized ?? false"
+  [attr.aria-label]="visual()?.label ?? 'Board tile'"
+>
+  @if (visual()?.label; as label) {
+    <span class="tile__label">{{ label }}</span>
+  }
+</div>

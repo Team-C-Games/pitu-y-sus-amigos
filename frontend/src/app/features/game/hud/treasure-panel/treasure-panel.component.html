@@ -1,0 +1,13 @@
+<section class="treasure-panel">
+  <ng-container *ngIf="treasure() as currentTreasure; else noTreasure">
+    <span class="treasure-panel__visual" aria-hidden="true">{{ currentTreasure.visual ?? '◇' }}</span>
+    <div>
+      <strong>{{ currentTreasure.label }}</strong>
+      <p>{{ currentTreasure.id }}</p>
+    </div>
+  </ng-container>
+
+  <ng-template #noTreasure>
+    <p>No current treasure</p>
+  </ng-template>
+</section>
