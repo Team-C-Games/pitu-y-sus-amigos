@@ -1,0 +1,8 @@
+<header>
+  <div>
+    <span>{{ title() }}</span>
+    <span *ngIf="connectionStatus()">Connection Status: {{ connectionStatus() }}</span>
+    <span *ngIf="currentPlayer()">Current Player: {{ currentPlayer() }}</span>
+    <span *ngIf="gameCode()">Game Code: {{ gameCode() }}</span>
+  </div>
+</header>
