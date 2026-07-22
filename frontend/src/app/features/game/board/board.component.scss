@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  width: min(100%, 36rem);
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 2px solid #4f4030;
+  border-radius: 0.5rem;
+}

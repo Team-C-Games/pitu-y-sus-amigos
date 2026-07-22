@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+.turn-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cfc3ad;
+  border-radius: 0.5rem;
+  background: #fffaf0;
+}
+
+.turn-indicator__color {
+  width: 1rem;
+  aspect-ratio: 1;
+  border: 1px solid #5c4a38;
+  border-radius: 50%;
+}
+
+p {
+  margin: 0.125rem 0 0;
+}

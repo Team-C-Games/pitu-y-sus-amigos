@@ -3,30 +3,33 @@ using Laberinto.Api.Hubs;
 using Laberinto.Api.Realtime;
 using Laberinto.Infrastructure.Persistence.InMemory;
 
-const string DevelopmentFrontendCorsPolicy = "DevelopmentFrontend";
+const string ConfiguredCorsPolicy = "ConfiguredCors";
 
 var builder = WebApplication.CreateBuilder(args);
 
-var developmentCorsOrigins = builder.Configuration
+var corsOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
-    .Get<string[]>() ?? [];
-var useDevelopmentCors = builder.Environment.IsDevelopment() && developmentCorsOrigins.Length > 0;
+    .Get<string[]>()?
+    .Where(origin => !string.IsNullOrWhiteSpace(origin))
+    .ToArray() ?? [];
+
+if (corsOrigins.Length == 0)
+{
+    corsOrigins = ["http://localhost:4200"];
+}
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSignalR();
 
-if (useDevelopmentCors)
-{
-    builder.Services.AddCors(options => options.AddPolicy(
-        DevelopmentFrontendCorsPolicy,
-        policy => policy
-            .WithOrigins(developmentCorsOrigins)
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials()));
-}
+builder.Services.AddCors(options => options.AddPolicy(
+    ConfiguredCorsPolicy,
+    policy => policy
+        .WithOrigins(corsOrigins)
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials()));
 
 builder.Services.AddSingleton<ConnectionRegistry>();
 builder.Services.AddSingleton<RealtimeBroadcaster>();
@@ -47,12 +50,12 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
-
-if (useDevelopmentCors)
+if (app.Environment.IsDevelopment())
 {
-    app.UseCors(DevelopmentFrontendCorsPolicy);
+    app.UseHttpsRedirection();
 }
+
+app.UseCors(ConfiguredCorsPolicy);
 
 app.MapHub<GameHub>("/hubs/game");
 app.MapHealthEndpoints();

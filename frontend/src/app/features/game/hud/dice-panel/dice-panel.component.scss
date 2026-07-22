@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+.dice-panel {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #cfc3ad;
+  border-radius: 0.5rem;
+  background: #fffaf0;
+}
+
+.dice-panel__value {
+  display: grid;
+  width: 3.5rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 2px solid #5c4a38;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+}

@@ -1,0 +1,10 @@
+<section class="action-panel" aria-label="Game actions">
+  <button
+    *ngFor="let action of actions()"
+    type="button"
+    [disabled]="action.isDisabled ?? false"
+    (click)="actionSelected.emit(action.id)"
+  >
+    {{ action.label }}
+  </button>
+</section>

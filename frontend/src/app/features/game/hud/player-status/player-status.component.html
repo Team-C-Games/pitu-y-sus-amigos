@@ -1,0 +1,17 @@
+<article class="player-status" [class.player-status--active]="player().isActive">
+  <span
+    class="player-status__color"
+    [style.background-color]="player().color"
+    aria-hidden="true"
+  ></span>
+  <div class="player-status__details">
+    <strong>{{ player().name }}</strong>
+    <span>{{ player().points }} points</span>
+  </div>
+  <span *ngIf="player().isReady !== undefined" class="player-status__badge">
+    {{ player().isReady ? 'Ready' : 'Not ready' }}
+  </span>
+  <span *ngIf="player().isConnected !== undefined" class="player-status__badge">
+    {{ player().isConnected ? 'Connected' : 'Disconnected' }}
+  </span>
+</article>

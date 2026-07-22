@@ -1,0 +1,11 @@
+<section class="board" aria-label="Game board" role="grid">
+  @for (row of indexes; track row) {
+    @for (column of indexes; track column) {
+      <app-tile
+        role="gridcell"
+        [position]="positionFor(row, column)"
+        [visual]="tileFor(row, column)"
+      />
+    }
+  }
+</section>
