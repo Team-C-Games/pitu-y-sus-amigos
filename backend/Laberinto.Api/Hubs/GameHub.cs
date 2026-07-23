@@ -58,8 +58,15 @@ public class GameHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        _connectionRegistry.Remove(Context.ConnectionId);
-        await _gameBridge.ConnectionClosedAsync(Context.ConnectionId, Context.ConnectionAborted);
+        try 
+        {
+            _connectionRegistry.Remove(Context.ConnectionId);
+            await _gameBridge.ConnectionClosedAsync(Context.ConnectionId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error cleaning game state.");
+        }
 
         try
         {
