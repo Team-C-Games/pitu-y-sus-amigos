@@ -2,7 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { HubConnectionState } from '@microsoft/signalr';
 import { Subscription } from 'rxjs';
 import { GameHubService } from '../realtime/game-hub.service';
-import { BoardPosition, BoardVisualState, PieceVisual, TileVisual, WallVisual } from '../../features/game/board/models';
+import { BoardPosition, BoardVisualState, magicSymbolFor, PieceVisual, TileVisual, WallVisual } from '../../features/game/board/models';
 import { DiceVisual, GameActionVisual, PlayerStatusVisual, TreasureVisual, TurnVisual } from '../../features/game/hud/models';
 import { LobbyPlayer } from '../../features/lobby/models';
 import { ConnectionStatus, GamePhase, GameSummaryEntry, PlayerMode, ToastKind, ToastMessage, WallNotice } from './facade-models';
@@ -118,18 +118,23 @@ export class GameFacade {
 
   readonly objective = computed<TreasureVisual | null>(() => {
     const symbolId = this.stateSignal().activeSymbolId;
-    return symbolId ? { id: symbolId, label: readableSymbol(symbolId), visual: '✦' } : null;
+    if (!symbolId) return null;
+    const symbol = magicSymbolFor(symbolId);
+    return { id: symbol.id, label: symbol.name, visual: symbol.glyph };
   });
 
   readonly board = computed<BoardVisualState>(() => {
     const state = this.stateSignal();
-    const cells: TileVisual[] = Object.entries(state.symbols).map(([id, position]) => ({
-      position,
-      kind: 'objective',
-      symbol: state.activeSymbolId === id ? '✦' : '◇',
-      emphasized: state.activeSymbolId === id,
-      label: readableSymbol(id),
-    }));
+    const cells: TileVisual[] = Object.entries(state.symbols).map(([id, position]) => {
+      const symbol = magicSymbolFor(id);
+      return {
+        position,
+        kind: 'objective',
+        symbol: symbol.glyph,
+        emphasized: state.activeSymbolId === id,
+        label: symbol.name,
+      };
+    });
     const pieces: PieceVisual[] = state.players.map((player) => ({
       id: player.playerId,
       color: colorFor(player.color),
@@ -219,8 +224,15 @@ export class GameFacade {
     try {
       if (loading) this.loadingSignal.set(loading);
       await this.connect();
-      await this.hub.dispatch({ name, payload });
-      return true;
+      const result = await this.hub.dispatch({ name, payload });
+      const rejection = result.envelopes.find(
+        (envelope) => envelope.type === 'action-rejected' || envelope.type === 'internal-error'
+      );
+      if (rejection && hasString(rejection.payload, 'message')) {
+        this.notify('error', rejection.payload['message']);
+        return false;
+      }
+      return !rejection;
     } catch (error) {
       this.notify('error', error instanceof Error ? error.message : 'No fue posible comunicarse con la partida.');
       return false;
@@ -233,6 +245,7 @@ export class GameFacade {
     const playerId = this.playerIdSignal();
     if (!playerId || this.restoring) return this.restoring;
     this.restoring = this.hub.dispatch({ name: 'resume-player', payload: { playerId } })
+      .then(() => undefined)
       .catch(() => this.clearPlayerSession())
       .finally(() => { this.restoring = undefined; });
     return this.restoring;
@@ -274,7 +287,6 @@ export class GameFacade {
 function emptyState(): HubState { return { status: 'none', players: [], currentPlayerId: null, activeSymbolId: null, remainingSteps: 0, winnerPlayerId: null, walls: [], symbols: {} }; }
 function phaseFor(status: HubState['status']): GamePhase { return status === 'inprogress' ? 'playing' : status === 'finished' ? 'finished' : status === 'lobby' ? 'lobby' : 'home'; }
 function colorFor(color: string | null): string { return color ? ({ red: '#ef5b5b', blue: '#4db7ff', green: '#4ee29a', yellow: '#f5c451' }[color.toLowerCase()] ?? color) : '#718096'; }
-function readableSymbol(id: string): string { return `Símbolo mágico ${id.replace('Symbol', '#')}`; }
 function connectionStatusFor(status: HubConnectionState): ConnectionStatus { return status === HubConnectionState.Connected ? 'connected' : status === HubConnectionState.Reconnecting ? 'reconnecting' : status === HubConnectionState.Connecting ? 'connecting' : 'disconnected'; }
 function directionFrom(from: BoardPosition, to: BoardPosition): 'Up' | 'Down' | 'Left' | 'Right' | null { if (to.column === from.column && to.row === from.row - 1) return 'Up'; if (to.column === from.column && to.row === from.row + 1) return 'Down'; if (to.row === from.row && to.column === from.column - 1) return 'Left'; if (to.row === from.row && to.column === from.column + 1) return 'Right'; return null; }
 function isRecord(value: unknown): value is Record<string, unknown> { return typeof value === 'object' && value !== null; }

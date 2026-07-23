@@ -55,6 +55,13 @@ describe('GameHubService', () => {
     });
   });
 
+  it('returns the direct result of a dispatched command', async () => {
+    connection.invoke.mockResolvedValueOnce({ envelopes: [] });
+
+    await service.connect();
+    await expect(service.dispatch({ name: 'ready', payload: {} })).resolves.toEqual({ envelopes: [] });
+  });
+
   it('publishes only valid game-event envelopes', async () => {
     const received = vi.fn();
     const errors = vi.fn();
@@ -93,7 +100,7 @@ class FakeHubConnection {
   readonly stop = vi.fn(async (): Promise<void> => {
     this.state = HubConnectionState.Disconnected;
   });
-  readonly invoke = vi.fn(async (..._arguments: unknown[]): Promise<void> => undefined);
+  readonly invoke = vi.fn(async (..._arguments: unknown[]): Promise<unknown> => undefined);
   readonly on = vi.fn((eventName: string, handler: (payload: unknown) => void): void => {
     this.eventHandlers.set(eventName, handler);
   });

@@ -10,6 +10,7 @@ describe('GameFacade', () => {
   let hub: FakeGameHub;
 
   beforeEach(() => {
+    sessionStorage.clear();
     hub = new FakeGameHub();
     TestBed.configureTestingModule({ providers: [{ provide: GameHubService, useValue: hub }] });
     facade = TestBed.inject(GameFacade);
@@ -34,6 +35,8 @@ describe('GameFacade', () => {
     expect(facade.board().size).toBe(6);
     expect(facade.board().pieces).toHaveLength(1);
     expect(facade.dice().value).toBe(3);
+    expect(facade.objective()).toMatchObject({ label: 'Sol', visual: '☀' });
+    expect(facade.board().cells[0]).toMatchObject({ symbol: '☀', label: 'Sol' });
   });
 
   it('stores the player session sent by the server', () => {
@@ -53,6 +56,15 @@ describe('GameFacade', () => {
       expect(facade.toasts()).toHaveLength(0);
     } finally { vi.useRealTimers(); }
   });
+
+  it('does not report a rejected realtime command as successful', async () => {
+    hub.dispatch.mockResolvedValueOnce({
+      envelopes: [{ type: 'action-rejected', payload: { message: 'No es tu turno.' }, occurredAt: '2026-07-22T00:00:00Z' }],
+    });
+
+    await expect(facade.startGame()).resolves.toBe(false);
+    expect(facade.toasts()).toContainEqual(expect.objectContaining({ kind: 'error', text: 'No es tu turno.' }));
+  });
 });
 
 class FakeGameHub {
@@ -64,7 +76,7 @@ class FakeGameHub {
   readonly connectionState$ = this.connectionState.asObservable();
   readonly connect = vi.fn(async () => { this.connectionState.next(HubConnectionState.Connected); });
   readonly getState = vi.fn(async () => undefined);
-  readonly dispatch = vi.fn(async () => undefined);
+  readonly dispatch = vi.fn(async (): Promise<{ envelopes: readonly RealtimeEnvelope[] }> => ({ envelopes: [] }));
 
   emitState(payload: unknown): void { this.events.next({ type: 'game-state', payload, occurredAt: '2026-07-22T00:00:00Z' }); }
 }

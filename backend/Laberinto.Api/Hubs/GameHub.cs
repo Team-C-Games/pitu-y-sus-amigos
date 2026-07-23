@@ -97,25 +97,30 @@ public class GameHub : Hub
         }
     }
 
-    public async Task Dispatch(RealtimeCommand? command)
+    public async Task<BridgeResult> Dispatch(RealtimeCommand? command)
     {
         try
         {
             if (!_commandValidator.TryValidate(command, out var message))
             {
-                await SendEnvelopesAsync([RealtimeErrorEnvelopeFactory.CreateActionRejected(message)]);
-                return;
+                var rejected = new BridgeResult([RealtimeErrorEnvelopeFactory.CreateActionRejected(message)]);
+                await SendEnvelopesAsync(rejected.Envelopes);
+                return rejected;
             }
 
             var result = await _gameBridge.DispatchAsync(Context.ConnectionId, command, Context.ConnectionAborted);
             await SendEnvelopesAsync(result.Envelopes);
+            return result;
         }
         catch (OperationCanceledException) when (Context.ConnectionAborted.IsCancellationRequested)
         {
+            return new BridgeResult([]);
         }
         catch (Exception exception)
         {
-            await HandleUnexpectedErrorAsync(exception);
+            var error = RealtimeErrorEnvelopeFactory.CreateInternalError();
+            await HandleUnexpectedErrorAsync(exception, error);
+            return new BridgeResult([error]);
         }
     }
 
@@ -145,7 +150,7 @@ public class GameHub : Hub
         }
     }
 
-    private async Task HandleUnexpectedErrorAsync(Exception exception)
+    private async Task HandleUnexpectedErrorAsync(Exception exception, RealtimeEnvelope? error = null)
     {
         _logger.LogError(
             exception,
@@ -156,7 +161,7 @@ public class GameHub : Hub
         {
             await _broadcaster.SendToCallerAsync(
                 Context.ConnectionId,
-                RealtimeErrorEnvelopeFactory.CreateInternalError(),
+                error ?? RealtimeErrorEnvelopeFactory.CreateInternalError(),
                 CancellationToken.None);
         }
         catch (OperationCanceledException) when (Context.ConnectionAborted.IsCancellationRequested)

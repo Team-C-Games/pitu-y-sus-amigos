@@ -7,6 +7,7 @@ import {
 } from './game-realtime.config';
 import { RealtimeCommand } from './realtime-command';
 import { RealtimeEnvelope } from './realtime-envelope';
+import { BridgeResult } from './bridge-result';
 
 const GameEventName = 'game-event';
 const GetStateMethodName = 'GetState';
@@ -85,8 +86,8 @@ export class GameHubService implements OnDestroy {
     await this.requireConnection().invoke(GetStateMethodName);
   }
 
-  async dispatch(command: RealtimeCommand): Promise<void> {
-    await this.requireConnection().invoke(DispatchMethodName, command);
+  async dispatch(command: RealtimeCommand): Promise<BridgeResult> {
+    return this.requireConnection().invoke<BridgeResult>(DispatchMethodName, command);
   }
 
   ngOnDestroy(): void {
