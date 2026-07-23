@@ -137,7 +137,9 @@ public sealed class Game
 
         RemainingSteps -= path.Count;
         var collected = ResolveActiveSymbol();
-        if (collected || Status == GameStatus.Finished)
+        var endTurn = collected || Status == GameStatus.Finished || RemainingSteps == 0;
+
+        if (endTurn)
         {
             RemainingSteps = 0;
             CompleteTurn();
