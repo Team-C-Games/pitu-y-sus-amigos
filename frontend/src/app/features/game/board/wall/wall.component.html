@@ -1,6 +1,7 @@
-<div
+<span
   class="wall"
   [class.wall--horizontal]="wall().orientation === 'horizontal'"
   [class.wall--vertical]="wall().orientation === 'vertical'"
+  [class.wall--revealed]="wall().justRevealed ?? false"
   aria-hidden="true"
-></div>
+></span>

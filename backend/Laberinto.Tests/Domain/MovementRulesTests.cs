@@ -52,4 +52,17 @@ public class MovementRulesTests
             [Direction.Right, Direction.Left],
             out _));
     }
+
+    [Fact]
+    public void Path_cannot_leave_the_board()
+    {
+        var board = new BoardDefinition([]);
+
+        Assert.Throws<InvalidMoveException>(() => MovementRules.ExecutePath(
+            board,
+            new Position(0, 0),
+            new Position(0, 0),
+            [Direction.Up],
+            out _));
+    }
 }

@@ -1,81 +1,56 @@
-:host {
-  display: block;
-  width: 100%;
-  min-height: 100%;
+.spectator {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
-.spectator-page {
-  width: 100%;
-  min-height: 100%;
+.spectator__banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.spectator__note {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.spectator__hud {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(300px, 360px) minmax(280px, 340px);
-  gap: 20px;
+  gap: var(--space-2);
+}
+
+.spectator__layout {
+  display: grid;
+  gap: var(--space-3);
   align-items: start;
-  padding: 20px;
-  background:
-    radial-gradient(circle at top, rgba(56, 189, 248, 0.18), transparent 28%),
-    linear-gradient(135deg, #0f172a 0%, #111827 52%, #172554 100%);
-  color: #f8fafc;
 }
 
-.spectator-page__board-area,
-.spectator-page__panel-block,
-.spectator-page__mini-panels,
-.spectator-page__action-area {
-  border-radius: 20px;
-  background: rgba(15, 23, 42, 0.76);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+.spectator__board {
+  max-width: min(78vh, 100%);
+  margin: 0 auto;
+  width: 100%;
 }
 
-.spectator-page__board-area {
-  padding: 18px;
+.spectator__sidebar {
   display: grid;
-  place-items: center;
-  min-height: 640px;
+  gap: var(--space-3);
 }
 
-.spectator-page__sidebar {
-  display: grid;
-  gap: 16px;
+.spectator__players {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
-.spectator-page__panel-block,
-.spectator-page__mini-panels,
-.spectator-page__action-area {
-  padding: 16px;
-}
-
-.spectator-page__mini-panels {
-  display: grid;
-  gap: 12px;
-}
-
-.spectator-page__action-area {
-  display: grid;
-  align-content: start;
-}
-
-@media (max-width: 1100px) {
-  .spectator-page {
-    grid-template-columns: 1fr;
+@media (min-width: 900px) {
+  .spectator__hud {
+    grid-template-columns: 1fr auto;
   }
 
-  .spectator-page__board-area {
-    min-height: auto;
-  }
-}
-
-@media (max-width: 640px) {
-  .spectator-page {
-    padding: 12px;
-  }
-
-  .spectator-page__board-area,
-  .spectator-page__panel-block,
-  .spectator-page__mini-panels,
-  .spectator-page__action-area {
-    border-radius: 16px;
+  .spectator__layout {
+    grid-template-columns: minmax(0, 1fr) 20rem;
   }
 }

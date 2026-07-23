@@ -1,6 +1,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Laberinto.Application.Gameplay;
+using Laberinto.Domain.Dice;
+using Laberinto.Infrastructure.Persistence.InMemory;
+using Laberinto.Infrastructure.Randomness;
 
 namespace Laberinto.Api.Realtime;
 
@@ -29,7 +34,10 @@ public static class GameBridgeServiceCollectionExtensions
         }
         else
         {
-            services.AddSingleton<IGameBridge, UnavailableRealGameBridge>();
+            services.TryAddSingleton<IGameRepository, InMemoryGameRepository>();
+            services.TryAddSingleton<IDiceRoller, RandomDiceRoller>();
+            services.TryAddSingleton<GameApplicationService>();
+            services.AddSingleton<IGameBridge, ApplicationGameBridge>();
         }
 
         return mode;

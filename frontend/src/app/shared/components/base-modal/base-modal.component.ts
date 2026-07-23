@@ -1,33 +1,28 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, input, output } from '@angular/core';
 
+/**
+ * Modal genérico reutilizable (confirmaciones, avisos). Presentacional:
+ * quien lo usa controla apertura y reacciona a los eventos.
+ */
 @Component({
   selector: 'app-base-modal',
-  imports: [CommonModule],
   templateUrl: './base-modal.component.html',
-  styleUrls: ['./base-modal.component.scss']
+  styleUrls: ['./base-modal.component.scss'],
 })
 export class BaseModalComponent {
-  @Input() title!: Signal<string>;
-  @Input() opened!: Signal<boolean>;
-  @Input() closable!: Signal<boolean>;
+  readonly opened = input<boolean>(false);
+  readonly title = input<string>('');
+  readonly closable = input<boolean>(true);
+  readonly confirmLabel = input<string>('Confirmar');
+  readonly cancelLabel = input<string>('Cancelar');
 
-  @Output() closed = new EventEmitter<void>();
-  @Output() confirmed = new EventEmitter<void>();
-  @Output() cancelled = new EventEmitter<void>();
+  readonly closed = output<void>();
+  readonly confirmed = output<void>();
+  readonly cancelled = output<void>();
 
-  onClose(): void {
+  protected onBackdropClick(): void {
     if (this.closable()) {
       this.closed.emit();
     }
-  }
-
-  onConfirm(): void {
-    this.confirmed.emit();
-  }
-
-  onCancel(): void {
-    this.cancelled.emit();
   }
 }

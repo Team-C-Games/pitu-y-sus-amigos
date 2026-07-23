@@ -1,47 +1,41 @@
-<section
-  class="board"
-  aria-label="Game board"
-  role="grid"
-  [class.board--selected]="hasSelection()"
-  [class.board--animated]="hasAnimations()"
->
-  @for (row of indexes; track row) {
-    @for (column of indexes; track column) {
-      <app-tile
-        role="gridcell"
-        [position]="positionFor(row, column)"
-        [visual]="tileFor(row, column)"
-      />
+<div class="board-frame">
+  <div
+    class="board"
+    role="grid"
+    aria-label="Tablero del laberinto, 6 por 6"
+    [class.board--interactive]="interactive()"
+  >
+    @for (row of indexes(); track row) {
+      @for (column of indexes(); track column) {
+        <app-tile
+          role="gridcell"
+          [position]="{ row: row, column: column }"
+          [visual]="tileFor(row, column)"
+          [selected]="isSelected(row, column)"
+          [interactive]="interactive()"
+          (click)="onTileClick(row, column)"
+        />
+      }
     }
-  }
 
-  @if (boardVisualState().pieces.length > 0) {
-    <div class="board__pieces" aria-hidden="true">
-      @for (piece of boardVisualState().pieces; track piece.label) {
-        <app-piece [piece]="piece" />
+    <div class="board__overlay" aria-hidden="true">
+      @for (wall of boardVisualState().walls; track wallKey(wall)) {
+        <app-wall
+          [wall]="wall"
+          [style.left]="wallLeft(wall)"
+          [style.top]="wallTop(wall)"
+          [style.width]="wall.orientation === 'horizontal' ? wallLength() : null"
+          [style.height]="wall.orientation === 'vertical' ? wallLength() : null"
+        />
+      }
+
+      @for (piece of boardVisualState().pieces; track piece.id) {
+        <app-piece
+          [piece]="piece"
+          [style.left]="pieceLeft(piece)"
+          [style.top]="pieceTop(piece)"
+        />
       }
     </div>
-  }
-
-  @if (boardVisualState().walls.length > 0) {
-    <div class="board__walls" aria-hidden="true">
-      @for (wall of boardVisualState().walls; track wall.position.row + '-' + wall.position.column + '-' + wall.orientation) {
-        <app-wall [wall]="wall" />
-      }
-    </div>
-  }
-
-  @if (boardVisualState().animations.length > 0) {
-    <div class="board__animations" aria-label="Board animations">
-      @for (animation of boardVisualState().animations; track animation) {
-        <span>{{ animation }}</span>
-      }
-    </div>
-  }
-
-  @if (boardVisualState().selection) {
-    <div class="board__selection" aria-label="Board selection">
-      <span>Selected: {{ boardVisualState().selection!.row }}, {{ boardVisualState().selection!.column }}</span>
-    </div>
-  }
-</section>
+  </div>
+</div>

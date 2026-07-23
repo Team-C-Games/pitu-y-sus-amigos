@@ -30,7 +30,13 @@ public static class StartingCornerRules
                 (Corners[1], Corners[2])
             };
             var chosen = pairs[random.Next(pairs.Length)];
-            return Array.AsReadOnly(new[] { chosen.Item1, chosen.Item2 });
+            var corners = new[] { chosen.Item1, chosen.Item2 };
+            if (random.Next(2) == 1)
+            {
+                Array.Reverse(corners);
+            }
+
+            return Array.AsReadOnly(corners);
         }
 
         var selectedCorners = Corners

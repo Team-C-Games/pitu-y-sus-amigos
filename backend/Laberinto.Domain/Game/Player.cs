@@ -6,11 +6,14 @@ public sealed class Player
 {
     public Guid Id { get; }
     public string Name { get; }
-    public PlayerColor Color { get; }
+    public PlayerColor? Color { get; private set; }
     public Position Position { get; private set; }
-    public Position StartingPosition { get; }
+    public Position StartingPosition { get; private set; }
+    public int Points { get; private set; }
+    public bool IsReady { get; private set; }
+    internal long ArrivalOrder { get; private set; }
 
-    public Player(Guid id, string name, PlayerColor color, Position startingPosition)
+    public Player(Guid id, string name, PlayerColor? color, Position startingPosition)
     {
         if (id == Guid.Empty)
         {
@@ -27,7 +30,7 @@ public sealed class Player
                 "Player position must be inside the board.");
         }
 
-        if (!Enum.IsDefined(color))
+        if (color.HasValue && !Enum.IsDefined(color.Value))
         {
             throw new ArgumentOutOfRangeException(nameof(color));
         }
@@ -56,5 +59,38 @@ public sealed class Player
     public void ResetToStart()
     {
         Position = StartingPosition;
+    }
+
+    public void ChooseColor(PlayerColor color)
+    {
+        if (!Enum.IsDefined(color))
+        {
+            throw new ArgumentOutOfRangeException(nameof(color));
+        }
+
+        Color = color;
+    }
+
+    public void SetStartingPosition(Position position, long arrivalOrder)
+    {
+        ArgumentNullException.ThrowIfNull(position);
+        StartingPosition = position;
+        Position = position;
+        ArrivalOrder = arrivalOrder;
+    }
+
+    public void MarkReady()
+    {
+        IsReady = true;
+    }
+
+    internal void SetArrivalOrder(long arrivalOrder)
+    {
+        ArrivalOrder = arrivalOrder;
+    }
+
+    internal void AddPoint()
+    {
+        Points++;
     }
 }

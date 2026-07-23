@@ -52,7 +52,7 @@ public class HealthEndpointsTests : IClassFixture<WebApplicationFactory<Program>
     }
 
     [Fact]
-    public async Task Production_does_not_enable_the_development_cors_policy()
+    public async Task Production_applies_the_configured_cors_policy()
     {
         using var productionFactory = _factory.WithWebHostBuilder(builder =>
             builder.UseEnvironment("Production"));
@@ -66,6 +66,8 @@ public class HealthEndpointsTests : IClassFixture<WebApplicationFactory<Program>
 
         using var response = await client.SendAsync(request);
 
-        Assert.False(response.Headers.Contains("Access-Control-Allow-Origin"));
+        Assert.Equal(
+            "http://localhost:4200",
+            response.Headers.GetValues("Access-Control-Allow-Origin").Single());
     }
 }

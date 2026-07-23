@@ -1,14 +1,15 @@
-import { Component, Input } from '@angular/core';
-import { Signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, input } from '@angular/core';
 
+/**
+ * Overlay de carga/reconexión. Presentacional: el layout decide cuándo
+ * mostrarlo a partir del estado de la fachada.
+ */
 @Component({
   selector: 'app-loading-overlay',
-  imports: [CommonModule],
   templateUrl: './loading-overlay.component.html',
-  styleUrls: ['./loading-overlay.component.scss']
+  styleUrls: ['./loading-overlay.component.scss'],
 })
 export class LoadingOverlayComponent {
-  @Input() visible!: Signal<boolean>;
-  @Input() message!: Signal<string | null>;
+  readonly visible = input<boolean>(false);
+  readonly message = input<string | null>(null);
 }

@@ -1,28 +1,44 @@
-:host {
-  display: block;
-}
-
-.treasure-panel {
+.treasure {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  min-height: 3.5rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid #cfc3ad;
-  border-radius: 0.5rem;
-  background: #fffaf0;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(245, 196, 81, 0.35);
+  background:
+    radial-gradient(circle at 12% 50%, rgba(245, 196, 81, 0.12), transparent 60%),
+    var(--surface-1);
 }
 
-.treasure-panel__visual {
-  display: grid;
-  width: 2.5rem;
-  aspect-ratio: 1;
-  place-items: center;
-  border: 1px solid #5c4a38;
-  border-radius: 50%;
-  font-size: 1.25rem;
+.treasure__symbol {
+  font-size: 1.7rem;
+  line-height: 1;
+  color: var(--accent-gold);
+  text-shadow: 0 0 14px rgba(245, 196, 81, 0.8);
+  animation: float-soft 4s ease-in-out infinite;
 }
 
-p {
-  margin: 0.125rem 0 0;
+.treasure__info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.treasure__kicker {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(245, 196, 81, 0.75);
+}
+
+.treasure__label {
+  font-size: 0.98rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.treasure__label--done {
+  color: var(--text-muted);
 }

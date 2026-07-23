@@ -1,22 +1,16 @@
-<div class="app-layout">
-  <header class="app-layout__header">
-    <app-top-bar></app-top-bar>
+<div class="layout">
+  <header class="layout__header">
+    <app-top-bar
+      [connectionStatus]="facade.connectionStatus()"
+      [playerName]="playerName()"
+    />
   </header>
 
-  <main class="app-layout__main">
+  <main class="layout__main">
     <router-outlet></router-outlet>
   </main>
-
-  <footer class="app-layout__footer">
-    <!-- reservado para futuras acciones -->
-  </footer>
-
-  <app-loading-overlay></app-loading-overlay>
-
-  <app-notification-toast
-    [message]="activeMessage"
-    [type]="activeType"
-    [duration]="activeDuration"
-    (closed)="dismissCurrent()">
-  </app-notification-toast>
 </div>
+
+<app-loading-overlay [visible]="overlayVisible()" [message]="overlayMessage()" />
+
+<app-notification-toast [toasts]="facade.toasts()" (closed)="facade.dismissToast($event)" />

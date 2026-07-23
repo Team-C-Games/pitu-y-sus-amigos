@@ -1,28 +1,27 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { GameBoardComponent } from '../../../game/components/game-board/game-board.component';
-import { SidePanelComponent } from '../../../game/components/side-panel/side-panel.component';
-import { ActionPanelComponent } from '../../../game/components/action-panel/action-panel.component';
-import { PlayerStatusComponent } from '../../../game/components/player-status/player-status.component';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { GameFacade } from '../../../../core/facade';
+import { BoardComponent } from '../../../game/board/board.component';
+import { TurnIndicatorComponent } from '../../../game/hud/turn-indicator/turn-indicator.component';
 import { TreasurePanelComponent } from '../../../game/hud/treasure-panel/treasure-panel.component';
-import { SpectatorUiState } from '../../models';
+import { PlayerStatusComponent } from '../../../game/hud/player-status/player-status.component';
 
+/**
+ * Vista de espectador: mismo tablero y estado que la partida, pero sin
+ * ningún control de juego habilitado.
+ */
 @Component({
   selector: 'app-spectator-page',
   templateUrl: './spectator-page.component.html',
   styleUrls: ['./spectator-page.component.scss'],
-  imports: [
-    CommonModule,
-    GameBoardComponent,
-    SidePanelComponent,
-    ActionPanelComponent,
-    PlayerStatusComponent,
-    TreasurePanelComponent,
-  ],
+  imports: [BoardComponent, TurnIndicatorComponent, TreasurePanelComponent, PlayerStatusComponent],
 })
 export class SpectatorPageComponent {
-  @Input() spectatorUiState: SpectatorUiState = {
-    title: 'Observando partida',
-    watchingLabel: 'Observando partida',
-  };
+  protected readonly facade = inject(GameFacade);
+  private readonly router = inject(Router);
+
+  protected leave(): void {
+    this.facade.leaveGame();
+    void this.router.navigate(['/']);
+  }
 }

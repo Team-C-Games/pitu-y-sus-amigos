@@ -36,6 +36,9 @@ public static class MovementRules
         {
             var next = GetNextPosition(current, direction);
 
+            if (!BoardDefinition.IsInside(next))
+                throw new InvalidMoveException("Movement cannot leave the board.");
+
             if (visited.Contains(next))
                 throw new InvalidMoveException("No se puede retroceder sobre una casilla ya recorrida en este turno.");
 

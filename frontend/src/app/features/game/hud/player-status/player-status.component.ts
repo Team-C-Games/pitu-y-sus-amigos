@@ -1,11 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { PlayerStatusVisual } from '../models';
 
+/** Fila de estado de un jugador dentro del HUD. */
 @Component({
   selector: 'app-player-status',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './player-status.component.html',
   styleUrl: './player-status.component.scss',
 })

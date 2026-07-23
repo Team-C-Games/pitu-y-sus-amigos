@@ -4,6 +4,7 @@ import { SpectatorPageComponent } from './pages/spectator-page/spectator-page.co
 export const SPECTATOR_ROUTES: Routes = [
   {
     path: '',
-    component: SpectatorPageComponent
-  }
+    component: SpectatorPageComponent,
+    title: 'Espectador — El Laberinto Mágico',
+  },
 ];

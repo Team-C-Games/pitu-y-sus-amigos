@@ -1,12 +1,36 @@
-<section class="dice-panel">
-  <div class="dice-panel__value" aria-label="Dice result">
-    <span *ngIf="dice()?.value !== null && dice()?.value !== undefined; else noValue">
-      {{ dice()?.value }}
-    </span>
-    <ng-template #noValue>—</ng-template>
+<section class="dice">
+  <h3 class="panel__title">Dado mágico</h3>
+
+  <div
+    class="dice__cube"
+    [class.dice__cube--rolling]="isRolling()"
+    [class.dice__cube--result]="value() !== null"
+    aria-live="polite"
+    [attr.aria-label]="value() !== null ? 'Resultado: ' + value() : 'Dado sin lanzar'"
+  >
+    @if (value(); as diceValue) {
+      <span class="dice__value">{{ diceValue }}</span>
+    } @else {
+      <span class="dice__value dice__value--idle">?</span>
+    }
   </div>
 
-  <button type="button" [disabled]="!(dice()?.isAvailable ?? false)" (click)="rollRequested.emit()">
-    Roll dice
+  <p class="dice__hint">
+    @if (value() !== null) {
+      Podés avanzar hasta {{ value() }} pasos (o menos).
+    } @else if (isRolling()) {
+      Invocando el azar…
+    } @else {
+      El resultado marca tu máximo de pasos.
+    }
+  </p>
+
+  <button
+    type="button"
+    class="btn btn--primary btn--block"
+    [disabled]="!canRoll()"
+    (click)="rollRequested.emit()"
+  >
+    {{ isRolling() ? 'Lanzando…' : 'Lanzar dado' }}
   </button>
 </section>

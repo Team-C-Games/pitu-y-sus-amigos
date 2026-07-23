@@ -1,9 +1,13 @@
 <div
   class="tile"
+  [class.tile--objective]="visual()?.kind === 'objective'"
+  [class.tile--found]="visual()?.symbolFound ?? false"
   [class.tile--emphasized]="visual()?.emphasized ?? false"
-  [attr.aria-label]="visual()?.label ?? 'Board tile'"
+  [class.tile--selected]="selected()"
+  [class.tile--interactive]="interactive()"
+  [attr.aria-label]="visual()?.label ?? 'Celda ' + (position().row + 1) + ',' + (position().column + 1)"
 >
-  @if (visual()?.label; as label) {
-    <span class="tile__label">{{ label }}</span>
+  @if (visual()?.symbol; as symbol) {
+    <span class="tile__symbol">{{ symbol }}</span>
   }
 </div>

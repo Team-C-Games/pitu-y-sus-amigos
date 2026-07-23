@@ -1,17 +1,21 @@
-<article class="player-status" [class.player-status--active]="player().isActive">
-  <span
-    class="player-status__color"
-    [style.background-color]="player().color"
-    aria-hidden="true"
-  ></span>
-  <div class="player-status__details">
-    <strong>{{ player().name }}</strong>
-    <span>{{ player().points }} points</span>
+<article
+  class="player"
+  [class.player--active]="player().isActive"
+  [class.player--offline]="player().isConnected === false"
+>
+  <span class="player__color" [style.--player-color]="player().color" aria-hidden="true"></span>
+
+  <div class="player__info">
+    <span class="player__name">{{ player().name }}</span>
+    <span class="player__meta">
+      {{ player().points }} {{ player().points === 1 ? 'símbolo' : 'símbolos' }}
+      @if (player().isConnected === false) {
+        · desconectado
+      }
+    </span>
   </div>
-  <span *ngIf="player().isReady !== undefined" class="player-status__badge">
-    {{ player().isReady ? 'Ready' : 'Not ready' }}
-  </span>
-  <span *ngIf="player().isConnected !== undefined" class="player-status__badge">
-    {{ player().isConnected ? 'Connected' : 'Disconnected' }}
-  </span>
+
+  @if (player().isActive) {
+    <span class="player__turn" title="Turno activo" aria-label="Turno activo">◆</span>
+  }
 </article>

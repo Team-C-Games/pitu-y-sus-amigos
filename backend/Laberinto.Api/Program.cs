@@ -1,7 +1,10 @@
 using Laberinto.Api.Endpoints;
 using Laberinto.Api.Hubs;
 using Laberinto.Api.Realtime;
+using Laberinto.Application.Gameplay;
 using Laberinto.Infrastructure.Persistence.InMemory;
+using Laberinto.Infrastructure.Randomness;
+using Laberinto.Domain.Dice;
 
 const string ConfiguredCorsPolicy = "ConfiguredCors";
 
@@ -35,6 +38,9 @@ builder.Services.AddSingleton<ConnectionRegistry>();
 builder.Services.AddSingleton<RealtimeBroadcaster>();
 builder.Services.AddSingleton<RealtimeCommandValidator>();
 builder.Services.AddSingleton(typeof(SingleSessionStore<>));
+builder.Services.AddSingleton<IGameRepository, InMemoryGameRepository>();
+builder.Services.AddSingleton<IDiceRoller, RandomDiceRoller>();
+builder.Services.AddSingleton<GameApplicationService>();
 
 var gameBridgeMode = builder.Services.AddGameBridge(
     builder.Configuration,

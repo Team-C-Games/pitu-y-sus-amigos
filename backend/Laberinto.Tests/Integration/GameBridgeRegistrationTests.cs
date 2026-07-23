@@ -9,7 +9,7 @@ namespace Laberinto.Tests.Integration;
 public class GameBridgeRegistrationTests
 {
     [Fact]
-    public void Missing_mode_defaults_to_the_unavailable_real_bridge()
+    public void Missing_mode_defaults_to_the_application_real_bridge()
     {
         var services = new ServiceCollection();
 
@@ -19,7 +19,7 @@ public class GameBridgeRegistrationTests
         var bridge = services.BuildServiceProvider().GetRequiredService<IGameBridge>();
 
         Assert.Equal(GameBridgeMode.Real, mode);
-        Assert.IsType<UnavailableRealGameBridge>(bridge);
+        Assert.IsType<ApplicationGameBridge>(bridge);
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class GameBridgeRegistrationTests
     }
 
     [Fact]
-    public void Real_mode_registers_the_unavailable_real_bridge()
+    public void Real_mode_registers_the_application_real_bridge()
     {
         var services = new ServiceCollection();
 
@@ -45,7 +45,7 @@ public class GameBridgeRegistrationTests
             new TestHostEnvironment(Environments.Production));
         var bridge = services.BuildServiceProvider().GetRequiredService<IGameBridge>();
 
-        Assert.IsType<UnavailableRealGameBridge>(bridge);
+        Assert.IsType<ApplicationGameBridge>(bridge);
     }
 
     [Fact]

@@ -1,39 +1,45 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { GameBoardComponent } from '../../components/game-board/game-board.component';
-import { SidePanelComponent } from '../../components/side-panel/side-panel.component';
-import { ActionPanelComponent } from '../../components/action-panel/action-panel.component';
-import { GameUiFacade, MockGameProvider } from '../../services';
-import { PlayerStatusComponent } from '../../components/player-status/player-status.component';
+import { Router } from '@angular/router';
+import { GameFacade } from '../../../../core/facade';
+import { BoardComponent } from '../../board/board.component';
+import { BoardPosition } from '../../board/models';
+import { TurnIndicatorComponent } from '../../hud/turn-indicator/turn-indicator.component';
 import { TreasurePanelComponent } from '../../hud/treasure-panel/treasure-panel.component';
 import { DicePanelComponent } from '../../hud/dice-panel/dice-panel.component';
+import { ActionPanelComponent } from '../../hud/action-panel/action-panel.component';
+import { PlayerStatusComponent } from '../../hud/player-status/player-status.component';
 
 @Component({
   selector: 'app-game-page',
   templateUrl: './game-page.component.html',
   styleUrls: ['./game-page.component.scss'],
   imports: [
-    CommonModule, 
-    GameBoardComponent, 
-    SidePanelComponent, 
+    BoardComponent,
+    TurnIndicatorComponent,
+    TreasurePanelComponent,
+    DicePanelComponent,
     ActionPanelComponent,
     PlayerStatusComponent,
-    TreasurePanelComponent,
-    DicePanelComponent
   ],
 })
 export class GamePageComponent {
-  private readonly gameUiFacade = inject(GameUiFacade);
-  private readonly mockGameProvider = inject(MockGameProvider);
+  protected readonly facade = inject(GameFacade);
+  private readonly router = inject(Router);
 
-  protected readonly uiState = this.gameUiFacade.state;
-  protected readonly boardVisualState = this.mockGameProvider.boardVisualState;
-  protected readonly players = this.mockGameProvider.players;
-  protected readonly currentTurnPlayer = this.mockGameProvider.currentTurnPlayer;
-  protected readonly readyPlayers = this.mockGameProvider.readyPlayers;
-  protected readonly spectators = this.mockGameProvider.spectators;
-  protected readonly treasuresFound = this.mockGameProvider.treasuresFound;
-  protected readonly currentPlayer = this.mockGameProvider.currentPlayer;
-  protected readonly treasure = this.mockGameProvider.treasure;
-  protected readonly dice = this.mockGameProvider.dice;
+  protected onTileSelected(position: BoardPosition): void {
+    this.facade.selectTile(position);
+  }
+
+  protected async onRollRequested(): Promise<void> {
+    await this.facade.rollDice();
+  }
+
+  protected async onActionSelected(actionId: string): Promise<void> {
+    if (actionId === 'leave') {
+      await this.facade.leaveGame();
+      void this.router.navigate(['/']);
+      return;
+    }
+    await this.facade.performAction(actionId);
+  }
 }
