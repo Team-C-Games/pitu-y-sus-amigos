@@ -1,44 +1,33 @@
-<section class="spectator-page" aria-label="Spectator page">
-  <div class="spectator-page__board-area">
-    <app-game-board></app-game-board>
+<div class="page spectator">
+  <header class="spectator__banner" role="status">
+    <span class="pill pill--info">
+      <span class="pill__dot" aria-hidden="true"></span>
+      Modo espectador
+    </span>
+    <p class="spectator__note">Estás viendo la partida en vivo. Los controles están deshabilitados.</p>
+  </header>
+
+  <div class="spectator__hud">
+    <app-turn-indicator [turn]="facade.turn()" />
+    <app-treasure-panel [treasure]="facade.objective()" />
   </div>
 
-  <aside class="spectator-page__sidebar">
-    <div class="spectator-page__panel-block">
-      <app-side-panel
-        [players]="[
-          { id: '1', name: 'Jugador 1', isReady: true, isCurrentTurn: false },
-          { id: '2', name: 'Jugador 2', isReady: true, isCurrentTurn: true },
-          { id: '3', name: 'Jugador 3', isReady: false, isCurrentTurn: false }
-        ]"
-        [currentTurnPlayer]="{ id: '2', name: 'Jugador 2', isReady: true, isCurrentTurn: true }"
-        [readyPlayers]="[
-          { id: '1', name: 'Jugador 1', isReady: true, isCurrentTurn: false },
-          { id: '2', name: 'Jugador 2', isReady: true, isCurrentTurn: true }
-        ]"
-        [spectators]="['Espectador 1', 'Espectador 2']"
-        [treasuresFound]="3">
-      </app-side-panel>
-    </div>
+  <div class="spectator__layout">
+    <section class="spectator__board" aria-label="Tablero">
+      <app-board [boardVisualState]="facade.board()" [interactive]="false" />
+    </section>
 
-    <div class="spectator-page__mini-panels">
-      <app-player-status
-        [playerName]="'Jugador 1'"
-        [playerAvatar]="'placeholder.png'"
-        [treasureCount]="3">
-      </app-player-status>
+    <aside class="spectator__sidebar">
+      <section class="panel panel--tight spectator__players" aria-label="Jugadores">
+        <h3 class="panel__title">Exploradores</h3>
+        @for (player of facade.playerStatuses(); track player.id) {
+          <app-player-status [player]="player" />
+        }
+      </section>
 
-      <app-treasure-panel
-        [treasure]="{ id: 'forest-treasure', label: 'Tesoro del bosque', visual: '◇' }">
-      </app-treasure-panel>
-    </div>
-  </aside>
-
-  <div class="spectator-page__action-area">
-    <app-action-panel
-      [playerMode]="'spectator'"
-      [turnState]="'waiting'"
-      [actions]="[]">
-    </app-action-panel>
+      <button type="button" class="btn btn--ghost btn--block" (click)="leave()">
+        Dejar de espectar
+      </button>
+    </aside>
   </div>
-</section>
+</div>

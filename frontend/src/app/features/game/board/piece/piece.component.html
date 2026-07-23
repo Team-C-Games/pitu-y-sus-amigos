@@ -1,5 +1,7 @@
-<div
+<span
   class="piece"
-  [style.background-color]="piece().color"
-  [attr.aria-label]="piece().label ?? 'Player piece'"
-></div>
+  [class.piece--active]="piece().isActive ?? false"
+  [style.--piece-color]="piece().color"
+  [attr.aria-label]="'Ficha de ' + piece().label"
+  role="img"
+></span>

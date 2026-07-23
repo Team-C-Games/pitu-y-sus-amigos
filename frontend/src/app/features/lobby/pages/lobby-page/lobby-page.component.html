@@ -1,58 +1,58 @@
-<section class="lobby-page" aria-label="Lobby page">
-  <div class="lobby-page__shell">
-    <header class="lobby-page__header">
-      <div>
-        <p class="lobby-page__eyebrow">Sala de espera</p>
-        <h1>Lobby del juego</h1>
-      </div>
+<div class="page page--narrow lobby">
+  <header class="lobby__header">
+    <h1 class="lobby__title">Sala de espera</h1>
+    <span class="pill pill--info lobby__count">
+      {{ facade.playerCount() }}/{{ facade.maxPlayers }} jugadores
+    </span>
+  </header>
 
-      <div class="lobby-page__room">
-        <span class="lobby-page__room-label">Código de sala</span>
-        <app-lobby-code [gameCode]="uiState().roomCode"></app-lobby-code>
-      </div>
-    </header>
-
-    <div class="lobby-page__content">
-      <section class="lobby-page__panel">
-        <div class="lobby-page__panel-head">
-          <h2>Jugadores</h2>
-          <span class="lobby-page__counter">{{ uiState().players.length }}/4</span>
-        </div>
-
-        <app-lobby-player-list [players]="uiState().players"></app-lobby-player-list>
-      </section>
-
-      <aside class="lobby-page__sidebar">
-        <section class="lobby-page__panel lobby-page__panel--compact">
-          <h2>Estado de la partida</h2>
-          <div class="lobby-page__buttons">
-            <app-ready-button [ready]="uiState().isPlayerReady" (readyChanged)="onReadyChanged($event)"></app-ready-button>
-            <app-start-game-button [enabled]="uiState().canStartGame" (startGame)="onStartGame()"></app-start-game-button>
-          </div>
-        </section>
-
-        @if (uiState().readyPlayers.length > 0) {
-          <section class="lobby-page__panel lobby-page__panel--compact">
-            <h2>Jugadores listos</h2>
-            <ul class="lobby-page__list">
-              @for (player of uiState().readyPlayers; track player.id) {
-                <li>{{ player.name }}</li>
-              }
-            </ul>
-          </section>
-        }
-
-        @if (uiState().spectators.length > 0) {
-          <section class="lobby-page__panel lobby-page__panel--compact">
-            <h2>Espectadores</h2>
-            <ul class="lobby-page__list">
-              @for (spectator of uiState().spectators; track spectator) {
-                <li>{{ spectator }}</li>
-              }
-            </ul>
-          </section>
-        }
-      </aside>
+  <section class="panel lobby__panel">
+    <div class="lobby__players" aria-label="Jugadores de la sala">
+      @for (slot of slots(); track slot?.id ?? 'empty-' + $index) {
+        <app-player-card [player]="slot" />
+      }
     </div>
-  </div>
-</section>
+
+    <p class="lobby__status" role="status">{{ statusText() }}</p>
+
+    @if (!facade.isLocalReady()) {
+      <section class="lobby__colors" aria-label="Elegir color">
+        <p>Elegí tu color en el orden de llegada</p>
+        <div class="lobby__color-list">
+          @for (color of facade.playerColors; track color.name) {
+            <button type="button" class="lobby__color" [style.--player-color]="color.value" (click)="chooseColor(color.name)">
+              <span></span>{{ color.label }}
+            </button>
+          }
+        </div>
+      </section>
+    }
+
+    <div class="lobby__actions">
+      <button
+        type="button"
+        class="btn btn--lg"
+        [class.btn--primary]="!facade.isLocalReady()"
+        [disabled]="facade.isLocalReady() || !facade.localPlayer()?.color"
+        (click)="markReady()"
+      >
+        {{ facade.isLocalReady() ? 'Listo para partir' : 'Estoy listo' }}
+      </button>
+
+      @if (facade.isLocalHost()) {
+        <button
+          type="button"
+          class="btn btn--gold btn--lg"
+          [disabled]="!facade.canStartGame()"
+          (click)="startGame()"
+        >
+          Iniciar expedición
+        </button>
+      }
+    </div>
+  </section>
+
+  <button type="button" class="btn btn--ghost lobby__leave" (click)="leave()">
+    Abandonar la sala
+  </button>
+</div>

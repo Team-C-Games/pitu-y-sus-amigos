@@ -1,0 +1,45 @@
+<div class="page page--narrow over">
+  <section class="over__hero">
+    <span class="over__halo" aria-hidden="true"></span>
+    <p class="over__kicker">Fin de la expedición</p>
+
+    @if (facade.winner(); as winner) {
+      <h1 class="over__title">
+        <span class="over__winner" [style.--winner-color]="winner.color">{{ winner.playerName }}</span>
+        conquistó el laberinto
+      </h1>
+      <p class="over__subtitle">
+        Encontró {{ winner.symbolsFound }}
+        {{ winner.symbolsFound === 1 ? 'símbolo mágico' : 'símbolos mágicos' }}.
+      </p>
+    } @else {
+      <h1 class="over__title">La partida terminó</h1>
+      <p class="over__subtitle">Nadie logró reclamar los símbolos esta vez.</p>
+    }
+  </section>
+
+  <section class="panel over__summary" aria-label="Resumen de la partida">
+    <h2 class="panel__title">Resumen</h2>
+    <ol class="over__list">
+      @for (entry of facade.summary(); track entry.playerName) {
+        <li class="over__row" [class.over__row--winner]="entry.isWinner">
+          <span class="over__pos">{{ $index + 1 }}</span>
+          <span class="over__chip" [style.--entry-color]="entry.color" aria-hidden="true"></span>
+          <span class="over__name">{{ entry.playerName }}</span>
+          <span class="over__score">
+            {{ entry.symbolsFound }} {{ entry.symbolsFound === 1 ? 'símbolo' : 'símbolos' }}
+          </span>
+        </li>
+      }
+    </ol>
+  </section>
+
+  <div class="over__actions">
+    <button type="button" class="btn btn--primary btn--lg" (click)="playAgain()">
+      Jugar de nuevo
+    </button>
+    <button type="button" class="btn btn--ghost btn--lg" (click)="goHome()">
+      Volver al inicio
+    </button>
+  </div>
+</div>

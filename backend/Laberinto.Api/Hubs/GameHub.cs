@@ -36,6 +36,7 @@ public class GameHub : Hub
                 RealtimeBroadcaster.ActiveGameGroup,
                 Context.ConnectionAborted);
             _connectionRegistry.Register(Context.ConnectionId);
+            await _gameBridge.ConnectionOpenedAsync(Context.ConnectionId, Context.ConnectionAborted);
 
             await base.OnConnectedAsync();
         }
@@ -58,6 +59,7 @@ public class GameHub : Hub
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         _connectionRegistry.Remove(Context.ConnectionId);
+        await _gameBridge.ConnectionClosedAsync(Context.ConnectionId, Context.ConnectionAborted);
 
         try
         {
@@ -83,7 +85,7 @@ public class GameHub : Hub
     {
         try
         {
-            var result = await _gameBridge.GetStateAsync(Context.ConnectionAborted);
+            var result = await _gameBridge.GetStateAsync(Context.ConnectionId, Context.ConnectionAborted);
             await SendEnvelopesAsync(result.Envelopes);
         }
         catch (OperationCanceledException) when (Context.ConnectionAborted.IsCancellationRequested)
@@ -105,7 +107,7 @@ public class GameHub : Hub
                 return;
             }
 
-            var result = await _gameBridge.DispatchAsync(command, Context.ConnectionAborted);
+            var result = await _gameBridge.DispatchAsync(Context.ConnectionId, command, Context.ConnectionAborted);
             await SendEnvelopesAsync(result.Envelopes);
         }
         catch (OperationCanceledException) when (Context.ConnectionAborted.IsCancellationRequested)

@@ -1,11 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
 import { GameActionVisual } from '../models';
 
+/** Panel de acciones del turno. Emite el id de la acción elegida. */
 @Component({
   selector: 'app-action-panel',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './action-panel.component.html',
   styleUrl: './action-panel.component.scss',
 })

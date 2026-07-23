@@ -1,27 +1,18 @@
-<div
-  class="toast"
-  [ngClass]="type()"
-  [style.--toast-duration]="duration() + 'ms'"
-  role="status"
-  aria-live="polite"
->
-  <div class="toast__content">
-    <span class="toast__icon" aria-hidden="true">
-      @if (type() === 'success') {
-        ✓
-      } @else if (type() === 'warning') {
-        !
-      } @else if (type() === 'error') {
-        ✕
-      } @else {
-        i
-      }
-    </span>
-
-    <span class="toast__message">{{ message() }}</span>
+@if (toasts().length > 0) {
+  <div class="toasts" role="log" aria-live="polite">
+    @for (toast of toasts(); track toast.id) {
+      <div class="toast toast--{{ toast.kind }}">
+        <span class="toast__bar" aria-hidden="true"></span>
+        <span class="toast__text">{{ toast.text }}</span>
+        <button
+          type="button"
+          class="toast__close"
+          aria-label="Cerrar notificación"
+          (click)="closed.emit(toast.id)"
+        >
+          ✕
+        </button>
+      </div>
+    }
   </div>
-
-  <button class="toast__close" type="button" (click)="closeManually()" aria-label="Cerrar notificación">
-    ✕
-  </button>
-</div>
+}

@@ -1,21 +1,378 @@
-html,
-body {
-  width: 100%;
-  min-height: 100%;
-  margin: 0;
+/* ============================================================================
+   EL LABERINTO MÁGICO — Sistema de diseño global
+   Tema: exploración futurista de un laberinto arcano.
+   Fondos de obsidiana/azul nocturno, acentos de cian eléctrico, violeta,
+   magenta sutil y dorado reservado para objetivos mágicos.
+   ========================================================================== */
+
+/* ── Design tokens ── */
+:root {
+  /* Fondos */
+  --bg-obsidian: #05070d;
+  --bg-night: #0a1020;
+  --bg-graphite: #141a29;
+  --surface-1: rgba(148, 178, 255, 0.055);
+  --surface-2: rgba(148, 178, 255, 0.09);
+  --surface-solid: #0d1322;
+
+  /* Bordes y líneas */
+  --line-soft: rgba(148, 178, 255, 0.14);
+  --line-strong: rgba(148, 178, 255, 0.28);
+
+  /* Texto */
+  --text-primary: #e8eefb;
+  --text-secondary: #a7b3cc;
+  --text-muted: #6b7691;
+
+  /* Acentos */
+  --accent-cyan: #3ee0ff;
+  --accent-cyan-deep: #0891b2;
+  --accent-violet: #a78bfa;
+  --accent-magenta: #f472b6;
+  --accent-gold: #f5c451;
+  --danger: #fb7185;
+  --success: #34d399;
+  --warning: #fbbf24;
+
+  /* Sombras y brillos */
+  --glow-cyan: 0 0 18px rgba(62, 224, 255, 0.35);
+  --glow-violet: 0 0 18px rgba(167, 139, 250, 0.35);
+  --glow-gold: 0 0 16px rgba(245, 196, 81, 0.4);
+  --shadow-panel: 0 18px 40px rgba(2, 5, 12, 0.55);
+
+  /* Tipografía */
+  --font-ui: 'Avenir Next', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display: 'Futura', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', ui-monospace, monospace;
+
+  /* Métricas */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2.25rem;
+  --topbar-height: 3.5rem;
 }
 
-body {
-  overflow: hidden;
-}
-
-* {
+/* ── Reset y base ── */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-app-root {
-  display: block;
-  width: 100%;
-  min-height: 100vh;
+html {
+  height: 100%;
 }
 
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--bg-obsidian);
+  background-image:
+    radial-gradient(ellipse 70% 45% at 18% 0%, rgba(76, 29, 149, 0.28), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 85% 12%, rgba(8, 145, 178, 0.18), transparent 60%),
+    radial-gradient(ellipse 90% 60% at 50% 110%, rgba(30, 41, 82, 0.5), transparent 70%),
+    linear-gradient(180deg, var(--bg-night) 0%, var(--bg-obsidian) 55%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+  margin: 0 0 var(--space-3);
+  letter-spacing: 0.01em;
+}
+
+p {
+  margin: 0 0 var(--space-3);
+}
+
+a {
+  color: var(--accent-cyan);
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+::selection {
+  background: rgba(62, 224, 255, 0.3);
+}
+
+/* ── Scrollbar ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+/* ── Paneles (glassmorphism moderado) ── */
+.panel {
+  background: linear-gradient(160deg, var(--surface-2), var(--surface-1) 55%);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: var(--space-5);
+}
+
+.panel--tight {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+}
+
+.panel__title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-3);
+}
+
+/* ── Botones ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.65rem 1.4rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease,
+    border-color 140ms ease, opacity 140ms ease;
+  user-select: none;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--surface-2);
+  border-color: var(--accent-cyan);
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: linear-gradient(135deg, var(--accent-cyan-deep), #6d28d9);
+  border-color: transparent;
+  box-shadow: var(--glow-cyan);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0aa8cf, #7c3aed);
+  border-color: transparent;
+  box-shadow: 0 0 26px rgba(62, 224, 255, 0.5);
+}
+
+.btn--gold {
+  background: linear-gradient(135deg, #b98a24, #8a5a13);
+  border-color: transparent;
+  box-shadow: var(--glow-gold);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--line-soft);
+  color: var(--text-secondary);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  color: var(--text-primary);
+}
+
+.btn--danger {
+  border-color: rgba(251, 113, 133, 0.4);
+  color: var(--danger);
+  background: rgba(251, 113, 133, 0.08);
+}
+
+.btn--danger:hover:not(:disabled) {
+  border-color: var(--danger);
+  background: rgba(251, 113, 133, 0.16);
+}
+
+.btn--lg {
+  padding: 0.9rem 1.8rem;
+  font-size: 1.05rem;
+  border-radius: var(--radius-lg);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* ── Inputs ── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  text-align: left;
+}
+
+.field__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-soft);
+  background: rgba(5, 8, 16, 0.55);
+  color: var(--text-primary);
+  font: inherit;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px rgba(62, 224, 255, 0.16);
+}
+
+.input--code {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  text-align: center;
+}
+
+/* ── Chips y pills ── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.28rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft);
+  background: var(--surface-1);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.pill__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+
+.pill--ok { color: var(--success); border-color: rgba(52, 211, 153, 0.35); }
+.pill--warn { color: var(--warning); border-color: rgba(251, 191, 36, 0.35); }
+.pill--bad { color: var(--danger); border-color: rgba(251, 113, 133, 0.35); }
+.pill--info { color: var(--accent-cyan); border-color: rgba(62, 224, 255, 0.35); }
+
+/* ── Utilidades de página ── */
+.page {
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) var(--space-6);
+  animation: page-enter 320ms ease both;
+}
+
+.page--narrow {
+  max-width: 34rem;
+}
+
+.text-muted { color: var(--text-muted); }
+.text-secondary { color: var(--text-secondary); }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ── Animaciones compartidas ── */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(62, 224, 255, 0.25); }
+  50% { box-shadow: 0 0 22px rgba(62, 224, 255, 0.55); }
+}
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes dice-roll {
+  0% { transform: rotate(0) scale(1); }
+  40% { transform: rotate(200deg) scale(1.12); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes wall-flash {
+  0% { opacity: 0; transform: scaleY(0.4); }
+  35% { opacity: 1; }
+  100% { opacity: 1; transform: scaleY(1); }
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

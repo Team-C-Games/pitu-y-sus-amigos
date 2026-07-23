@@ -1,8 +1,17 @@
-<header>
-  <div>
-    <span>{{ title() }}</span>
-    <span *ngIf="connectionStatus()">Connection Status: {{ connectionStatus() }}</span>
-    <span *ngIf="currentPlayer()">Current Player: {{ currentPlayer() }}</span>
-    <span *ngIf="gameCode()">Game Code: {{ gameCode() }}</span>
+<div class="top-bar">
+  <a class="top-bar__brand" routerLink="/" aria-label="Ir al inicio">
+    <span class="top-bar__mark" aria-hidden="true"></span>
+    <span class="top-bar__title">{{ title() }}</span>
+  </a>
+
+  <div class="top-bar__status">
+    @if (playerName(); as name) {
+      <span class="pill top-bar__player" title="Tu nombre">{{ name }}</span>
+    }
+
+    <span class="pill {{ statusClass() }}" role="status">
+      <span class="pill__dot" aria-hidden="true"></span>
+      {{ statusLabel() }}
+    </span>
   </div>
-</header>
+</div>

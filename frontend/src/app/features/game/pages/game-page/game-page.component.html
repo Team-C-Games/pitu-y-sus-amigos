@@ -1,32 +1,51 @@
-<section class="game-page" aria-label="Game page">
-  <div class="game-page__board-area">
-    <app-game-board [boardVisualState]="boardVisualState()"></app-game-board>
+<div class="page game">
+  <header class="game__hud-top">
+    <app-turn-indicator [turn]="facade.turn()" />
+    <app-treasure-panel [treasure]="facade.objective()" />
+  </header>
+
+  @if (facade.wallNotice(); as notice) {
+    <aside class="game__wall-notice" role="alert">
+      <span class="game__wall-icon" aria-hidden="true">▮</span>
+      <p class="game__wall-text">{{ notice.text }}</p>
+      <button
+        type="button"
+        class="game__wall-close"
+        aria-label="Cerrar aviso"
+        (click)="facade.dismissWallNotice()"
+      >
+        ✕
+      </button>
+    </aside>
+  }
+
+  <div class="game__layout">
+    <section class="game__board" aria-label="Tablero">
+      <app-board
+        [boardVisualState]="facade.board()"
+        [interactive]="facade.isMyTurn()"
+        (tileSelected)="onTileSelected($event)"
+      />
+    </section>
+
+    <aside class="game__sidebar">
+      <section class="panel panel--tight game__players" aria-label="Jugadores">
+        <h3 class="panel__title">Exploradores</h3>
+        @for (player of facade.playerStatuses(); track player.id) {
+          <app-player-status [player]="player" />
+        }
+      </section>
+
+      <section class="panel panel--tight">
+        <app-dice-panel [dice]="facade.dice()" (rollRequested)="onRollRequested()" />
+      </section>
+
+      <section class="panel panel--tight">
+        <app-action-panel
+          [actions]="facade.actions()"
+          (actionSelected)="onActionSelected($event)"
+        />
+      </section>
+    </aside>
   </div>
-
-  <aside class="game-page__sidebar">
-    <div class="game-page__panel-block">
-      <app-side-panel
-        [players]="players()"
-        [currentTurnPlayer]="currentTurnPlayer()"
-        [readyPlayers]="readyPlayers()"
-        [spectators]="spectators()"
-        [treasuresFound]="treasuresFound()">
-      </app-side-panel>
-    </div>
-
-    <div class="game-page__mini-panels">
-      <app-player-status
-        [playerName]="currentPlayer().playerName"
-        [playerAvatar]="currentPlayer().playerAvatar"
-        [treasureCount]="currentPlayer().treasureCount">
-      </app-player-status>
-
-      <app-treasure-panel [treasure]="treasure()"></app-treasure-panel>
-      <app-dice-panel [dice]="dice()"></app-dice-panel>
-    </div>
-  </aside>
-
-  <div class="game-page__action-area">
-    <app-action-panel></app-action-panel>
-  </div>
-</section>
+</div>

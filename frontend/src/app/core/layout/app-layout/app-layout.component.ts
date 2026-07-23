@@ -1,30 +1,35 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
-import { NotificationToastComponent } from '../../../shared/components/notification-toast/notification-toast.component';
-import { TopBarComponent } from '../../../shared/components/top-bar/top-bar.component';
-import { NotificationFacade } from '../../../shared/services/notification-facade.service';
+import { GameFacade } from '../../facade';
+import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay';
+import { NotificationToastComponent } from '../../../shared/components/notification-toast';
+import { TopBarComponent } from '../../../shared/components/top-bar';
 
+/**
+ * Shell de la aplicación: única pieza que conecta la fachada con los
+ * componentes transversales (top bar, overlay, toasts).
+ */
 @Component({
   selector: 'app-app-layout',
-  imports: [
-    TopBarComponent,
-    RouterOutlet,
-    LoadingOverlayComponent,
-    NotificationToastComponent,
-  ],
+  imports: [TopBarComponent, RouterOutlet, LoadingOverlayComponent, NotificationToastComponent],
   templateUrl: './app-layout.component.html',
   styleUrls: ['./app-layout.component.scss'],
 })
 export class AppLayoutComponent {
-  private readonly notificationFacade = inject(NotificationFacade);
+  protected readonly facade = inject(GameFacade);
 
-  protected readonly activeNotification = this.notificationFacade.activeNotification;
-  protected readonly activeMessage = computed(() => this.activeNotification()?.message ?? '');
-  protected readonly activeType = computed(() => this.activeNotification()?.type ?? 'info');
-  protected readonly activeDuration = computed(() => this.activeNotification()?.duration ?? 3000);
+  protected readonly playerName = computed(() => {
+    const name = this.facade.playerName();
+    return name.length > 0 ? name : null;
+  });
 
-  protected dismissCurrent(): void {
-    this.notificationFacade.dismissCurrent();
-  }
+  protected readonly overlayVisible = computed(
+    () => this.facade.isLoading() || this.facade.connectionStatus() === 'reconnecting'
+  );
+
+  protected readonly overlayMessage = computed(() =>
+    this.facade.connectionStatus() === 'reconnecting'
+      ? 'Reconectando con la partida…'
+      : this.facade.loadingMessage()
+  );
 }

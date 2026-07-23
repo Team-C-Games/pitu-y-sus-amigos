@@ -1,10 +1,16 @@
-<section class="action-panel" aria-label="Game actions">
-  <button
-    *ngFor="let action of actions()"
-    type="button"
-    [disabled]="action.isDisabled ?? false"
-    (click)="actionSelected.emit(action.id)"
-  >
-    {{ action.label }}
-  </button>
+<section class="actions" aria-label="Acciones del turno">
+  <h3 class="panel__title">Acciones</h3>
+  @for (action of actions(); track action.id) {
+    <button
+      type="button"
+      class="btn btn--block"
+      [class.btn--danger]="action.id === 'leave'"
+      [disabled]="action.isDisabled ?? false"
+      (click)="actionSelected.emit(action.id)"
+    >
+      {{ action.label }}
+    </button>
+  } @empty {
+    <p class="actions__empty">Sin acciones disponibles.</p>
+  }
 </section>

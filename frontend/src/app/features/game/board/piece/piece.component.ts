@@ -1,9 +1,9 @@
 import { Component, input } from '@angular/core';
 import { PieceVisual } from '../models';
 
+/** Ficha de jugador sobre el tablero. */
 @Component({
   selector: 'app-piece',
-  standalone: true,
   templateUrl: './piece.component.html',
   styleUrl: './piece.component.scss',
 })

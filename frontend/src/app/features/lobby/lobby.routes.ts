@@ -4,6 +4,7 @@ import { LobbyPageComponent } from './pages/lobby-page/lobby-page.component';
 export const LOBBY_ROUTES: Routes = [
   {
     path: '',
-    component: LobbyPageComponent
-  }
+    component: LobbyPageComponent,
+    title: 'Sala de espera — El Laberinto Mágico',
+  },
 ];

@@ -1,50 +1,70 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, inject, signal } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { BaseModalComponent } from '../../../../shared/components/base-modal/base-modal.component';
-import { SessionService } from '../../../../shared/services/session.service';
-import { HomeUiState } from '../../models';
+import { Component, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { GameFacade } from '../../../../core/facade';
+
+type HomeAction = 'create' | 'join' | 'spectate';
 
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.scss'],
-  imports: [CommonModule, RouterModule, BaseModalComponent],
 })
 export class HomePageComponent {
-  @Input() homeUiState: HomeUiState = {
-    title: 'Laberinto',
-    createGameLabel: 'Crear partida',
-    joinGameLabel: 'Unirse a una partida',
-    spectatorLabel: 'Espectar partida',
-  };
-
+  private readonly facade = inject(GameFacade);
   private readonly router = inject(Router);
-  private readonly sessionService = inject(SessionService);
 
-  protected readonly modalOpened = signal(false);
-  protected readonly modalTitle = signal('Ingresa tu nombre');
-  protected readonly modalClosable = signal(true);
-  protected readonly playerNameDraft = signal('');
+  protected readonly playerName = signal('');
+  protected readonly action = signal<HomeAction>('create');
 
-  protected openJoinModal(): void {
-    this.modalOpened.set(true);
+  protected readonly needsName = computed(() => this.action() !== 'spectate');
+
+  protected readonly canSubmit = computed(() => {
+    const hasName = this.playerName().trim().length >= 2;
+    switch (this.action()) {
+      case 'create':
+        return hasName;
+      case 'join':
+        return hasName;
+      case 'spectate':
+        return true;
+    }
+  });
+
+  protected readonly submitLabel = computed(() => {
+    switch (this.action()) {
+      case 'create':
+        return 'Crear partida';
+      case 'join':
+        return 'Unirse a la partida';
+      case 'spectate':
+        return 'Espectar partida';
+    }
+  });
+
+  protected onNameInput(event: Event): void {
+    this.playerName.set((event.target as HTMLInputElement).value);
   }
 
-  protected closeJoinModal(): void {
-    this.playerNameDraft.set('');
-    this.modalOpened.set(false);
+  protected selectAction(action: HomeAction): void {
+    this.action.set(action);
   }
 
-  protected confirmJoin(): void {
-    const playerName = this.playerNameDraft().trim();
-
-    if (!playerName) {
+  protected async submit(): Promise<void> {
+    if (!this.canSubmit()) {
       return;
     }
+    const name = this.playerName().trim();
 
-    this.sessionService.setPlayerName(playerName);
-    this.closeJoinModal();
-    this.router.navigate(['/lobby']);
+    switch (this.action()) {
+      case 'create':
+        if (await this.facade.createGame(name)) void this.router.navigate(['/lobby']);
+        break;
+      case 'join':
+        if (await this.facade.joinGame(name)) void this.router.navigate(['/lobby']);
+        break;
+      case 'spectate':
+        if (await this.facade.spectate()) void this.router.navigate(['/spectator']);
+        break;
+    }
   }
 }

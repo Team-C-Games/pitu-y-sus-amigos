@@ -1,51 +1,80 @@
-<section class="home-page" aria-label="Home page">
-  <div class="home-page__shell">
-    <div class="home-page__hero">
-      <div class="home-page__badge">Tablero estratégico</div>
-      <h1>{{ homeUiState.title }}</h1>
-      <p class="home-page__subtitle">
-        Sumérgete en una partida de mesa moderna donde cada turno importa.
-      </p>
+<div class="page home">
+  <section class="home__hero">
+    <div class="home__emblem" aria-hidden="true">
+      <span class="home__emblem-ring"></span>
+      <span class="home__emblem-core"></span>
     </div>
+    <p class="home__kicker">Pitu y sus amigos presentan</p>
+    <h1 class="home__title">El Laberinto<br />Mágico</h1>
+    <p class="home__subtitle">
+      Explorá un laberinto de muros ocultos, encontrá los símbolos mágicos
+      y ganale la carrera a tus rivales. De 2 a 4 jugadores.
+    </p>
+  </section>
 
-    <div class="home-page__actions">
-      <a class="home-page__action-card" [routerLink]="['/lobby']">
-        <span class="home-page__action-icon">🎲</span>
-        <span class="home-page__action-title">{{ homeUiState.createGameLabel }}</span>
-        <span class="home-page__action-copy">Abre una sala nueva y prepara la partida.</span>
-      </a>
-
-      <button class="home-page__action-card" type="button" (click)="openJoinModal()">
-        <span class="home-page__action-icon">🧩</span>
-        <span class="home-page__action-title">{{ homeUiState.joinGameLabel }}</span>
-        <span class="home-page__action-copy">Únete a una mesa ya creada para seguir jugando.</span>
+  <section class="home__card panel" aria-label="Entrar al juego">
+    <div class="home__tabs" role="tablist" aria-label="Modo de entrada">
+      <button
+        type="button"
+        role="tab"
+        class="home__tab"
+        [class.home__tab--active]="action() === 'create'"
+        [attr.aria-selected]="action() === 'create'"
+        (click)="selectAction('create')"
+      >
+        Crear
       </button>
-
-      <a class="home-page__action-card home-page__action-card--spectator" [routerLink]="['/spectator']">
-        <span class="home-page__action-icon">👁️</span>
-        <span class="home-page__action-title">{{ homeUiState.spectatorLabel }}</span>
-        <span class="home-page__action-copy">Observa la partida en vivo desde la vista del público.</span>
-      </a>
+      <button
+        type="button"
+        role="tab"
+        class="home__tab"
+        [class.home__tab--active]="action() === 'join'"
+        [attr.aria-selected]="action() === 'join'"
+        (click)="selectAction('join')"
+      >
+        Unirse
+      </button>
+      <button
+        type="button"
+        role="tab"
+        class="home__tab"
+        [class.home__tab--active]="action() === 'spectate'"
+        [attr.aria-selected]="action() === 'spectate'"
+        (click)="selectAction('spectate')"
+      >
+        Espectar
+      </button>
     </div>
-  </div>
 
-  <app-base-modal
-    [title]="modalTitle"
-    [opened]="modalOpened"
-    [closable]="modalClosable"
-    (closed)="closeJoinModal()"
-    (cancelled)="closeJoinModal()"
-    (confirmed)="confirmJoin()">
-    <div class="home-page__modal-field">
-      <label class="home-page__modal-label" for="player-name-input">Nombre del jugador</label>
-      <input
-        id="player-name-input"
-        class="home-page__modal-input"
-        type="text"
-        [value]="playerNameDraft()"
-        (input)="playerNameDraft.set($any($event.target).value)"
-        placeholder="Escribe tu nombre"
-      />
-    </div>
-  </app-base-modal>
-</section>
+    @if (needsName()) {
+      <label class="field">
+        <span class="field__label">Tu nombre</span>
+        <input
+          class="input"
+          type="text"
+          maxlength="16"
+          placeholder="¿Cómo te llamás, explorador?"
+          [value]="playerName()"
+          (input)="onNameInput($event)"
+        />
+      </label>
+    }
+
+    <button
+      type="button"
+      class="btn btn--primary btn--lg btn--block"
+      [disabled]="!canSubmit()"
+      (click)="submit()"
+    >
+      {{ submitLabel() }}
+    </button>
+
+    <p class="home__hint text-muted">
+      @switch (action()) {
+        @case ('create') { Creá la única expedición local e invitá a tus amigos a abrir esta misma página. }
+        @case ('join') { Sumate a la expedición local que ya está esperando jugadores. }
+        @case ('spectate') { Vas a ver la partida en vivo, sin participar. }
+      }
+    </p>
+  </section>
+</div>

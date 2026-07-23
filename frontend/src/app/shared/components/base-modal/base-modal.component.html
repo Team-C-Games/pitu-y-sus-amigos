@@ -1,11 +1,38 @@
-<div *ngIf="opened()" class="modal-overlay" (click)="onClose()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <h2 class="modal-title">{{ title() }}</h2>
-    <ng-content></ng-content>
+@if (opened()) {
+  <div class="modal" (click)="onBackdropClick()">
+    <div
+      class="modal__box"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="title()"
+      (click)="$event.stopPropagation()"
+    >
+      <header class="modal__header">
+        <h2 class="modal__title">{{ title() }}</h2>
+        @if (closable()) {
+          <button
+            type="button"
+            class="modal__close"
+            aria-label="Cerrar"
+            (click)="closed.emit()"
+          >
+            ✕
+          </button>
+        }
+      </header>
 
-    <div class="modal-buttons">
-      <button (click)="onConfirm()">Confirm</button>
-      <button (click)="onCancel()">Cancel</button>
+      <div class="modal__content">
+        <ng-content></ng-content>
+      </div>
+
+      <footer class="modal__footer">
+        <button type="button" class="btn btn--ghost" (click)="cancelled.emit()">
+          {{ cancelLabel() }}
+        </button>
+        <button type="button" class="btn btn--primary" (click)="confirmed.emit()">
+          {{ confirmLabel() }}
+        </button>
+      </footer>
     </div>
   </div>
-</div>
+}

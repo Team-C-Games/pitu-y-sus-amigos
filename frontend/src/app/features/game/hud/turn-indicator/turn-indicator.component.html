@@ -1,17 +1,15 @@
-<section class="turn-indicator" aria-live="polite">
-  <ng-container *ngIf="turn() as currentTurn; else noTurn">
+<section class="turn panel--tight" aria-live="polite">
+  @if (turn(); as currentTurn) {
     <span
-      class="turn-indicator__color"
-      [style.background-color]="currentTurn.playerColor ?? 'transparent'"
+      class="turn__orb"
+      [style.--turn-color]="currentTurn.playerColor ?? 'var(--accent-cyan)'"
       aria-hidden="true"
     ></span>
-    <div>
-      <strong>{{ currentTurn.playerName }}</strong>
-      <p>{{ currentTurn.text }}</p>
+    <div class="turn__info">
+      <strong class="turn__name">Turno de {{ currentTurn.playerName }}</strong>
+      <span class="turn__text">{{ currentTurn.text }}</span>
     </div>
-  </ng-container>
-
-  <ng-template #noTurn>
-    <p>No active turn</p>
-  </ng-template>
+  } @else {
+    <span class="turn__text">Sin turno activo</span>
+  }
 </section>

@@ -1,7 +1,35 @@
-<div>
-  <img [src]="player.avatar || 'placeholder.png'" alt="Avatar">
-  <span>{{ player.name }}</span>
-  <span *ngIf="player.isHost">Host</span>
-  <span *ngIf="player.isReady">Ready</span>
-  <span *ngIf="player.isCurrentTurn">Current Turn</span>
-</div>
+@if (player(); as p) {
+  <div class="card" [class.card--ready]="p.isReady">
+    <span
+      class="card__avatar"
+      [style.--player-color]="p.color"
+      aria-hidden="true"
+    >{{ initials() }}</span>
+
+    <div class="card__info">
+      <span class="card__name">
+        {{ p.name }}
+        @if (p.isHost) {
+          <span class="card__host" title="Anfitrión">★</span>
+        }
+      </span>
+      <span class="card__state" [class.card__state--ready]="p.isReady">
+        {{ p.isReady ? 'Listo para partir' : 'Preparándose…' }}
+      </span>
+    </div>
+
+    <span
+      class="card__ready-dot"
+      [class.card__ready-dot--on]="p.isReady"
+      aria-hidden="true"
+    ></span>
+  </div>
+} @else {
+  <div class="card card--empty">
+    <span class="card__avatar card__avatar--empty" aria-hidden="true">?</span>
+    <div class="card__info">
+      <span class="card__name card__name--empty">Lugar libre</span>
+      <span class="card__state">Esperando explorador…</span>
+    </div>
+  </div>
+}

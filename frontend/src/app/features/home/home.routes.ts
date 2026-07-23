@@ -4,6 +4,7 @@ import { HomePageComponent } from './pages/home-page/home-page.component';
 export const HOME_ROUTES: Routes = [
   {
     path: '',
-    component: HomePageComponent
-  }
+    component: HomePageComponent,
+    title: 'El Laberinto Mágico',
+  },
 ];

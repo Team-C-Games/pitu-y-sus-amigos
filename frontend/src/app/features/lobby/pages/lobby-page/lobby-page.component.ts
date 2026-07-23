@@ -1,70 +1,58 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, inject, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { StartGameButtonComponent } from '../../components/start-game-button/start-game-button.component';
-import { ReadyButtonComponent } from '../../components/ready-button/ready-button.component';
-import { LobbyPlayerListComponent } from '../../components/lobby-player-list/lobby-player-list.component';
-import { LobbyCodeComponent } from '../../components/lobby-code/lobby-code.component';
-import { LobbyUiState } from '../../models';
+import { GameFacade } from '../../../../core/facade';
+import { LobbyPlayer } from '../../models';
+import { PlayerCardComponent } from '../../components/player-card/player-card.component';
 
 @Component({
   selector: 'app-lobby-page',
   templateUrl: './lobby-page.component.html',
   styleUrls: ['./lobby-page.component.scss'],
-  imports: [
-    CommonModule,
-    LobbyCodeComponent,
-    LobbyPlayerListComponent,
-    ReadyButtonComponent,
-    StartGameButtonComponent,
-  ],
+  imports: [PlayerCardComponent],
 })
 export class LobbyPageComponent {
+  protected readonly facade = inject(GameFacade);
   private readonly router = inject(Router);
-  private readonly mockCurrentPlayerId = '1';
 
-  @Input() lobbyUiState: LobbyUiState = {
-    roomCode: 'ABC123',
-    players: [
-      { id: '1', name: 'Player 1', isHost: true, isReady: false, isCurrentTurn: false },
-      { id: '2', name: 'Player 2', isHost: false, isReady: true, isCurrentTurn: true },
-      { id: '3', name: 'Player 3', isHost: false, isReady: false, isCurrentTurn: false },
-    ],
-    readyPlayers: [
-      { id: '2', name: 'Player 2', isHost: false, isReady: true, isCurrentTurn: true },
-    ],
-    spectators: ['Spectator 1'],
-    canStartGame: true,
-    isPlayerReady: false,
-  };
+  /** Ranuras fijas de la sala: jugadores presentes + lugares libres hasta 4. */
+  protected readonly slots = computed<readonly (LobbyPlayer | null)[]>(() => {
+    const players = this.facade.lobbyPlayers();
+    return [
+      ...players,
+      ...Array.from({ length: Math.max(0, this.facade.maxPlayers - players.length) }, () => null),
+    ];
+  });
 
-  protected readonly uiState = signal<LobbyUiState>({ ...this.lobbyUiState });
+  protected readonly statusText = computed(() => {
+    const count = this.facade.playerCount();
+    if (count < this.facade.minPlayers) {
+      return `Falta al menos ${this.facade.minPlayers - count} jugador para poder empezar.`;
+    }
+    if (!this.facade.canStartGame()) {
+      return 'Cuando todos estén listos, el anfitrión podrá iniciar la expedición.';
+    }
+    return this.facade.isLocalHost()
+      ? '¡Todo listo! Podés iniciar la partida.'
+      : 'Todo listo. Esperando a que el anfitrión inicie la partida…';
+  });
 
-  protected onReadyChanged(nextReady: boolean): void {
-    const currentPlayers = this.uiState().players.map((player) =>
-      player.id === this.mockCurrentPlayerId
-        ? { ...player, isReady: nextReady }
-        : player,
-    );
-
-    const readyPlayers = currentPlayers.filter((player) => player.isReady);
-    const canStartGame = currentPlayers.length > 0 && currentPlayers.every((player) => player.isReady);
-
-    this.uiState.set({
-      ...this.uiState(),
-      players: currentPlayers,
-      readyPlayers,
-      isPlayerReady: nextReady,
-      canStartGame,
-    });
+  protected async chooseColor(color: string): Promise<void> {
+    await this.facade.chooseColor(color);
   }
 
-  protected onStartGame(): void {
-    if (!this.uiState().canStartGame) {
+  protected async markReady(): Promise<void> {
+    await this.facade.markReady();
+  }
+
+  protected async startGame(): Promise<void> {
+    if (!this.facade.canStartGame()) {
       return;
     }
+    if (await this.facade.startGame()) void this.router.navigate(['/game']);
+  }
 
-    this.router.navigate(['/game']);
+  protected async leave(): Promise<void> {
+    await this.facade.leaveGame();
+    void this.router.navigate(['/']);
   }
 }
-

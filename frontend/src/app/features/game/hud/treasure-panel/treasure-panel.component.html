@@ -1,13 +1,14 @@
-<section class="treasure-panel">
-  <ng-container *ngIf="treasure() as currentTreasure; else noTreasure">
-    <span class="treasure-panel__visual" aria-hidden="true">{{ currentTreasure.visual ?? '◇' }}</span>
-    <div>
-      <strong>{{ currentTreasure.label }}</strong>
-      <p>{{ currentTreasure.id }}</p>
+<section class="treasure" aria-label="Objetivo mágico actual">
+  @if (treasure(); as currentTreasure) {
+    <span class="treasure__symbol" aria-hidden="true">{{ currentTreasure.visual ?? '◈' }}</span>
+    <div class="treasure__info">
+      <span class="treasure__kicker">Objetivo mágico</span>
+      <strong class="treasure__label">{{ currentTreasure.label }}</strong>
     </div>
-  </ng-container>
-
-  <ng-template #noTreasure>
-    <p>No current treasure</p>
-  </ng-template>
+  } @else {
+    <div class="treasure__info">
+      <span class="treasure__kicker">Objetivo mágico</span>
+      <strong class="treasure__label treasure__label--done">Todos encontrados</strong>
+    </div>
+  }
 </section>

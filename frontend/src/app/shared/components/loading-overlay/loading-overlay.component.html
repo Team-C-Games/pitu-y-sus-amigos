@@ -1,4 +1,8 @@
-<div *ngIf="visible()" class="overlay">
-  <div class="spinner"></div>
-  <span *ngIf="message()">{{ message() }}</span>
-</div>
+@if (visible()) {
+  <div class="overlay" role="alert" aria-busy="true">
+    <div class="overlay__box">
+      <span class="overlay__spinner" aria-hidden="true"></span>
+      <span class="overlay__message">{{ message() ?? 'Cargando…' }}</span>
+    </div>
+  </div>
+}

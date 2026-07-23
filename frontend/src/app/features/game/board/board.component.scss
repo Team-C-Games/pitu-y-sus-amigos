@@ -1,14 +1,39 @@
 :host {
   display: block;
-  width: min(100%, 36rem);
+  width: 100%;
+}
+
+.board-frame {
+  padding: clamp(0.5rem, 2vw, 1rem);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, rgba(20, 26, 41, 0.9), rgba(10, 16, 32, 0.95));
+  border: 1px solid var(--line-soft);
+  box-shadow:
+    var(--shadow-panel),
+    inset 0 0 40px rgba(62, 224, 255, 0.05);
 }
 
 .board {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-template-rows: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(6, 1fr);
   aspect-ratio: 1;
-  overflow: hidden;
-  border: 2px solid #4f4030;
-  border-radius: 0.5rem;
+  gap: 4px;
+  border-radius: var(--radius-md);
+}
+
+.board__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+app-wall {
+  position: absolute;
+}
+
+app-piece {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: left 380ms cubic-bezier(0.3, 0.9, 0.4, 1.1), top 380ms cubic-bezier(0.3, 0.9, 0.4, 1.1);
 }

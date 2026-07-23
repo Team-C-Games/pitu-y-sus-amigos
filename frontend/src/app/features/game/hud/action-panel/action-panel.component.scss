@@ -1,13 +1,16 @@
-:host {
-  display: block;
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
-.action-panel {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  border: 1px solid #cfc3ad;
-  border-radius: 0.5rem;
-  background: #fffaf0;
+.actions .panel__title {
+  margin: 0 0 var(--space-1);
+}
+
+.actions__empty {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
 }

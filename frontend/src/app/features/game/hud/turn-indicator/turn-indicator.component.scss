@@ -1,25 +1,38 @@
-:host {
-  display: block;
-}
-
-.turn-indicator {
+.turn {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  min-height: 3.5rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid #cfc3ad;
-  border-radius: 0.5rem;
-  background: #fffaf0;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-soft);
+  background: var(--surface-1);
 }
 
-.turn-indicator__color {
-  width: 1rem;
-  aspect-ratio: 1;
-  border: 1px solid #5c4a38;
+.turn__orb {
+  --turn-color: var(--accent-cyan);
+  width: 14px;
+  height: 14px;
+  flex: none;
   border-radius: 50%;
+  background: var(--turn-color);
+  box-shadow: 0 0 12px var(--turn-color);
+  animation: pulse-glow 1.8s ease-in-out infinite;
 }
 
-p {
-  margin: 0.125rem 0 0;
+.turn__info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.turn__name {
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.turn__text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
